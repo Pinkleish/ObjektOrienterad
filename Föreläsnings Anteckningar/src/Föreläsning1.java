@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Föreläsning1 {
 
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
+        /* Scanner input = new Scanner(System.in);
         // name = input("Vad heter du? ")
         System.out.println("Vad heter du?");
         String name = input.nextLine();
@@ -13,14 +13,15 @@ public class Föreläsning1 {
         int age = input.nextInt();
 
         // print(name,age)
-        System.out.println(name + " " + age);
-    }
-    for (int i = 0; i < 10; i++){
-        system.out.println(i);
-    }
+        System.out.println(name + " " + age); */
 
-    public double myMethod(double par1, double par2){
-        double result = par1+par2;
-        return result;
+        var kitty = new Kitty("Garcghomp", 15);
+        System.out.println(kitty.Meow());
+
+        var evilkitty = new Kitty("Larry", 90);
+        System.out.println(evilkitty.Meow());
+
+        var tigguh = new BigCat();
+        System.out.println(tigguh.Meow());
     }
 }
