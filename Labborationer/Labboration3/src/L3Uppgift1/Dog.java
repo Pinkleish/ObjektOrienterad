@@ -5,7 +5,7 @@ public class Dog {
     private String gender;
     private String name;
 
-    public void Dog(){
+    public Dog(){
     }
     public int getAge(){
         return this.age;

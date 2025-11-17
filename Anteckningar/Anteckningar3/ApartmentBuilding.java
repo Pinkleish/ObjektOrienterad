@@ -17,10 +17,10 @@ public class ApartmentBuilding {
             System.out.println(this.apartments[i]);
         }
     }
-    public int getLiavableArea(){
+    /*public int getLiavableArea(){
         int area = 0;
         for (Apartment apartment : this.apartments){
             area += apartment.getArea();
-        }
-    }
+        }*/
 }
+

@@ -7,7 +7,13 @@ public class DogOwner {
     private Dog dogOne;
     private Dog dogTwo;
 
-    public void DogOwner(String name, String address, int numberOfDogs){
+    public DogOwner(String name, String address, int numberOfDogs){
+        this.name = name;
+        this.address = address;
+        Dog dog1 = new Dog();
+        if (numberOfDogs < 1){
+            Dog dog2 = new Dog();
+        }
     }
     public String getAddress(){
         return this.address;
