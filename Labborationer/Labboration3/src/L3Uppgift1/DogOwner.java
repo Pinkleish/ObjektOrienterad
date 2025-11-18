@@ -10,9 +10,13 @@ public class DogOwner {
     public DogOwner(String name, String address, int numberOfDogs){
         this.name = name;
         this.address = address;
-        Dog dog1 = new Dog();
-        if (numberOfDogs < 1){
-            Dog dog2 = new Dog();
+        this.numberOfDogs = numberOfDogs;
+        if (numberOfDogs == 1){
+            dogOne = new Dog();
+        }
+        else if (numberOfDogs == 2){
+            dogOne = new Dog();
+            dogTwo = new Dog();
         }
     }
     public String getAddress(){

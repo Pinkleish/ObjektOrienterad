@@ -20,6 +20,7 @@ public class Dog {
     public String setGender(String gender){
         this.gender = gender;
         return this.gender;
+
     }
     public String getName(){
         return this.name;
