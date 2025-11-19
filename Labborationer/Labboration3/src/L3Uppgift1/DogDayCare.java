@@ -2,7 +2,7 @@ package L3Uppgift1;
 import java.util.Scanner;
 
 public class DogDayCare {
-    private int costForOneDog;
+    private int costForOneDog = 500;
     private DogOwner dogOwner;
 
     public DogDayCare(){
@@ -23,6 +23,7 @@ public class DogDayCare {
         dog.setAge(dogAge);
     }
     private void calculateCost(DogOwner dogOwner){
+        System.out.println("Cost for " + dogOwner.getName() + " is: " + dogOwner.getNumberOfDogs()* costForOneDog);
     }
     private void memberRegistration(){
         Scanner scanner = new Scanner(System.in);
@@ -59,6 +60,7 @@ public class DogDayCare {
         if (dogOwner.getNumberOfDogs()==2){
             System.out.println(dogOwner.getDogTwo().getName()+", "+dogOwner.getDogTwo().getGender()+", "+dogOwner.getDogTwo().getAge());
         }
+        calculateCost(dogOwner);
 
     }
 }
