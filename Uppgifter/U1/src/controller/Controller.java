@@ -1,8 +1,14 @@
 package controller;
 
 //only imports what is strictly necessary from view-package
+import model.PerUnitItems;
 import view.MainFrame;
 import view.ButtonType;
+import model.Cake;
+import model.PerUnitItems;
+import model.Size;
+import model.Topping;
+import model.Filling;
 
 public class Controller {
     private MainFrame view;
@@ -14,13 +20,26 @@ public class Controller {
     private String [] currentOrderArray; // for test purposes only
     private double costCurrentOrder = 0; // for test purposes only
     private int nbrOfOrders = 0; // for test purposes only
+    private Cake Prinsesstårta;
+    private Cake Gräddtårta;
+    private Cake Chokladtårta;
+
 
     public Controller() {
+        Prinsesstårta = new Cake("Prinsesstårta");
+        Chokladtårta = new Cake("Chokladtårta");
+        Gräddtårta = new Cake("Gräddtårta");
+        PerUnitItems Vetebulle = new PerUnitItems("Vetebulle");
+        PerUnitItems Pepperkaka = new PerUnitItems("Pepparkaka");
+        PerUnitItems Hallongrotta = new PerUnitItems("Hallongrotta");
         view = new MainFrame(1000, 500, this);
         loadStringTestValues(); //for test purposes - remove when not needed more
         view.enableAllButtons();
         view.disableAddMenuButton();
         view.disableViewSelectedOrderButton();
+
+
+
     }
 
     //This method is only used for test purposes - remove when no longer needed
@@ -31,9 +50,9 @@ public class Controller {
         order1Simulation = new String[10];
         currentOrderArray = new String[10];
 
-        cakeMenuString[0] = "tårta0, storlek: 4 bitar, topping1, topping2, Pris0";
-        cakeMenuString[1] = "tårta1, storlek: 6 bitar, topping1, topping3, Pris1";
-        cakeMenuString[2] = "tårta2, storlek: 4 bitar, topping1, topping2, Pris2";
+        cakeMenuString[0] = Prinsesstårta.getName() + Prinsesstårta.getSize() + Prinsesstårta.getFilling1() + Prinsesstårta.getFilling2() + Prinsesstårta.getTopping() + Prinsesstårta.getCost();
+        cakeMenuString[1] = Chokladtårta.getName() + Chokladtårta.getSize() + Chokladtårta.getFilling1() + Chokladtårta.getFilling2() + Chokladtårta.getTopping() + Chokladtårta.getCost();
+        cakeMenuString[2] = Gräddtårta.getName() + Gräddtårta.getSize() + Gräddtårta.getFilling1() + Gräddtårta.getFilling2() + Gräddtårta.getTopping() + Gräddtårta.getCost();
         cakeMenuString[3] = "tårta3, storlek: 12 bitar,topping1, topping3, Pris3";
 
         perUnitItemMenuString[0] = "vetebulle, Pris11";
