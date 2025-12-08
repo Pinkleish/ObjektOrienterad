@@ -12,7 +12,7 @@ public class PerUnitItems extends Pastries {
         this.cost = cost;
     }
     public String getName(){
-        return name;
+        return this.name;
     }
     public int getCost(){
         return cost;
@@ -29,6 +29,5 @@ public class PerUnitItems extends Pastries {
         }
 
     }
-
-
 }
+

@@ -15,10 +15,6 @@ public enum Filling {
         this.price = price;
     }
 
-    public String getFillingName(){
-        return this.name;
-    }
-
     public int getFillingPrice(){
         return this.price;
     }

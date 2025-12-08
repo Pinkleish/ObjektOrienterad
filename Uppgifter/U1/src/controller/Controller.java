@@ -1,14 +1,13 @@
 package controller;
 
 //only imports what is strictly necessary from view-package
+import model.Pastries;
 import model.PerUnitItems;
 import view.MainFrame;
 import view.ButtonType;
 import model.Cake;
 import model.PerUnitItems;
-import model.Size;
-import model.Topping;
-import model.Filling;
+
 
 public class Controller {
     private MainFrame view;
@@ -23,15 +22,18 @@ public class Controller {
     private Cake Prinsesstårta;
     private Cake Gräddtårta;
     private Cake Chokladtårta;
+    private PerUnitItems Vetebulle;
+    private PerUnitItems Pepparkaka;
+    private PerUnitItems Hallongrotta;
 
 
     public Controller() {
         Prinsesstårta = new Cake("Prinsesstårta");
         Chokladtårta = new Cake("Chokladtårta");
         Gräddtårta = new Cake("Gräddtårta");
-        PerUnitItems Vetebulle = new PerUnitItems("Vetebulle");
-        PerUnitItems Pepperkaka = new PerUnitItems("Pepparkaka");
-        PerUnitItems Hallongrotta = new PerUnitItems("Hallongrotta");
+        Vetebulle = new PerUnitItems("Vetebulle");
+        Pepparkaka = new PerUnitItems("Pepparkaka");
+        Hallongrotta = new PerUnitItems("Hallongrotta");
         view = new MainFrame(1000, 500, this);
         loadStringTestValues(); //for test purposes - remove when not needed more
         view.enableAllButtons();
@@ -53,18 +55,19 @@ public class Controller {
         cakeMenuString[0] = Prinsesstårta.getName() + Prinsesstårta.getSize() + Prinsesstårta.getFilling1() + Prinsesstårta.getFilling2() + Prinsesstårta.getTopping() + Prinsesstårta.getCost();
         cakeMenuString[1] = Chokladtårta.getName() + Chokladtårta.getSize() + Chokladtårta.getFilling1() + Chokladtårta.getFilling2() + Chokladtårta.getTopping() + Chokladtårta.getCost();
         cakeMenuString[2] = Gräddtårta.getName() + Gräddtårta.getSize() + Gräddtårta.getFilling1() + Gräddtårta.getFilling2() + Gräddtårta.getTopping() + Gräddtårta.getCost();
-        cakeMenuString[3] = "tårta3, storlek: 12 bitar,topping1, topping3, Pris3";
+        //cakeMenuString[3] = "tårta3, storlek: 12 bitar,topping1, topping3, Pris3";
 
-        perUnitItemMenuString[0] = "vetebulle, Pris11";
-        perUnitItemMenuString[1] = "pepparkaka, Pris22";
+        perUnitItemMenuString[0] = Vetebulle.getName() + " " + Vetebulle.getCost();
+        perUnitItemMenuString[1] = Pepparkaka.getName() + " " + Pepparkaka.getCost();
+        perUnitItemMenuString[2] = Hallongrotta.getName() + " " + Hallongrotta.getCost();
 
-        orderHistoryMenuString[0] = "order1: kostnad:100";
+        orderHistoryMenuString[0] = "order1: kostnad:" + order1Simulation[0].getCost(); // OBS !! Behöver en polymorfisk lista för order & en lista som visar ordern i sträng
         orderHistoryMenuString[1] = "order2: kostand:200";
 
-        order1Simulation[0] = "Order 1";
-        order1Simulation[1] = "tårta1 Pris1";
-        order1Simulation[2] = "tårta2 Pris2";
-        order1Simulation[3] = "vetebulle Pris11";
+        order1Simulation[0] = Vetebulle.getName();
+        order1Simulation[1] = Hallongrotta.getName();
+        order1Simulation[2] = Prinsesstårta.getName();
+        order1Simulation[3] = Chokladtårta.getName();
 
     }
 

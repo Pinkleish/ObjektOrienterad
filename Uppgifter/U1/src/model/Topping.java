@@ -15,9 +15,6 @@ public enum Topping {
         this.price = price;
     }
 
-    public String getToppingName(){
-        return this.name;
-    }
     public int getToppingPrice(){
         return this.price;
     }

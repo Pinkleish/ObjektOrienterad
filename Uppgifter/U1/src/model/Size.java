@@ -15,10 +15,6 @@ public enum Size {
         this.price = price;
     }
 
-    public String getSize(){
-        return this.name;
-    }
-
     public int getSizePrice(){
         return this.price;
     }
