@@ -19,6 +19,8 @@ public abstract class Pastries {
 
     public abstract int getCost();
 
+    public abstract String toString();
+
 
 
 

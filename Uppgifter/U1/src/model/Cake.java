@@ -75,6 +75,6 @@ public class Cake extends Pastries{
 
     @Override
     public String toString() {
-        return name;
+        return name + ", Slices: " + size + ", " + filling1 + ", " + filling2 + ", " + topping + ". Price: " + cost;
     }
 }

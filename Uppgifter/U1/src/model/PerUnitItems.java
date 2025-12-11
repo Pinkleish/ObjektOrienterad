@@ -29,5 +29,10 @@ public class PerUnitItems extends Pastries {
         }
 
     }
+
+    @Override
+    public String toString() {
+        return name + ", Price: " + cost;
+    }
 }
 

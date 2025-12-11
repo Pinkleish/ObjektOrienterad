@@ -12,11 +12,13 @@ import model.PerUnitItems;
 public class Controller {
     private MainFrame view;
     private ButtonType currentLeftMenu = ButtonType.NoChoice;
-    private String [] cakeMenuString; // for test purposes only
-    private String [] perUnitItemMenuString; // for test purposes only
+    private Pastries [] cakeMenuObject;
+    private String [] cakeMenuString;
+    private Pastries [] perUnitItemMenuObject;// for test purposes only
+    private String [] perUnitItemMenuString;
     private String [] orderHistoryMenuString; // for test purposes only
-    private String [] order1Simulation; // for test purposes only
-    private String [] currentOrderArray; // for test purposes only
+    private Pastries [] currentOrderArray; // for test purposes only
+    private String [] currentOrderArrayString;
     private double costCurrentOrder = 0; // for test purposes only
     private int nbrOfOrders = 0; // for test purposes only
     private Cake Prinsesstårta;
@@ -25,9 +27,18 @@ public class Controller {
     private PerUnitItems Vetebulle;
     private PerUnitItems Pepparkaka;
     private PerUnitItems Hallongrotta;
+    private Pastries [][] orderHistoryArray;
+    int number = 0;
+    private String [][] orderHistoryArrayString;
 
 
     public Controller() {
+        perUnitItemMenuObject = new Pastries[3];
+        perUnitItemMenuString = new String[3];
+        cakeMenuObject = new Pastries[3];
+        cakeMenuString = new String[3];
+        currentOrderArray = new Pastries[10];
+        currentOrderArrayString = new String[10];
         Prinsesstårta = new Cake("Prinsesstårta");
         Chokladtårta = new Cake("Chokladtårta");
         Gräddtårta = new Cake("Gräddtårta");
@@ -35,41 +46,20 @@ public class Controller {
         Pepparkaka = new PerUnitItems("Pepparkaka");
         Hallongrotta = new PerUnitItems("Hallongrotta");
         view = new MainFrame(1000, 500, this);
-        loadStringTestValues(); //for test purposes - remove when not needed more
         view.enableAllButtons();
         view.disableAddMenuButton();
         view.disableViewSelectedOrderButton();
-
-
-
-    }
-
-    //This method is only used for test purposes - remove when no longer needed
-    private void loadStringTestValues() {
-        cakeMenuString = new String[10];
-        perUnitItemMenuString = new String[10];
         orderHistoryMenuString = new String[10];
-        order1Simulation = new String[10];
-        currentOrderArray = new String[10];
+        orderHistoryArray = new Pastries[10][10];
+        orderHistoryArrayString = new String[10][10];
 
-        cakeMenuString[0] = Prinsesstårta.getName() + Prinsesstårta.getSize() + Prinsesstårta.getFilling1() + Prinsesstårta.getFilling2() + Prinsesstårta.getTopping() + Prinsesstårta.getCost();
-        cakeMenuString[1] = Chokladtårta.getName() + Chokladtårta.getSize() + Chokladtårta.getFilling1() + Chokladtårta.getFilling2() + Chokladtårta.getTopping() + Chokladtårta.getCost();
-        cakeMenuString[2] = Gräddtårta.getName() + Gräddtårta.getSize() + Gräddtårta.getFilling1() + Gräddtårta.getFilling2() + Gräddtårta.getTopping() + Gräddtårta.getCost();
-        //cakeMenuString[3] = "tårta3, storlek: 12 bitar,topping1, topping3, Pris3";
 
-        perUnitItemMenuString[0] = Vetebulle.getName() + " " + Vetebulle.getCost();
-        perUnitItemMenuString[1] = Pepparkaka.getName() + " " + Pepparkaka.getCost();
-        perUnitItemMenuString[2] = Hallongrotta.getName() + " " + Hallongrotta.getCost();
-
-        orderHistoryMenuString[0] = "order1: kostnad:" + order1Simulation[0].getCost(); // OBS !! Behöver en polymorfisk lista för order & en lista som visar ordern i sträng
-        orderHistoryMenuString[1] = "order2: kostand:200";
-
-        order1Simulation[0] = Vetebulle.getName();
-        order1Simulation[1] = Hallongrotta.getName();
-        order1Simulation[2] = Prinsesstårta.getName();
-        order1Simulation[3] = Chokladtårta.getName();
 
     }
+
+
+
+
 
     //This method is called by class MainFrame when a button in the GUI is pressed
     public void buttonPressed(ButtonType button){
@@ -102,22 +92,32 @@ public class Controller {
     }
 
     public void addItemToOrder(int selectionIndex) {
-        System.out.println("Index selection left panel: " + selectionIndex); //for test purposes  - remove when not needed
-
         if (selectionIndex != -1){ // if something is selected in the left menu list
-            switch (currentLeftMenu) { //This might need to change depending on architecture
+            switch (currentLeftMenu) {
                 case Cake:
-                    currentOrderArray[nbrOfOrders] = cakeMenuString[selectionIndex].toString(); //for test purposes - needs to be replaced with solution of finding chosen menu item matching architecture for model
+                    currentOrderArray[nbrOfOrders] = cakeMenuObject[selectionIndex]; //for test purposes - needs to be replaced with solution of finding chosen menu item matching architecture for model
+                    if (cakeMenuObject[selectionIndex] != null){
+                        if (currentOrderArrayString[nbrOfOrders] == null) {
+                            currentOrderArrayString[nbrOfOrders] = currentOrderArray[nbrOfOrders].toString();
+                        }
+                    }
                     break;
                 case PerUnitItem:
-                    currentOrderArray[nbrOfOrders] = perUnitItemMenuString[selectionIndex].toString(); //see comment for case above
+                    currentOrderArray[nbrOfOrders] = perUnitItemMenuObject[selectionIndex]; //see comment for case above
+                            if (perUnitItemMenuObject[selectionIndex] != null){
+                                if (currentOrderArrayString[nbrOfOrders] == null) {
+                                    currentOrderArrayString[nbrOfOrders] = currentOrderArray[nbrOfOrders].toString();
+                            }
+                        }
+
                     break;
             }
-            nbrOfOrders++; //for test purposes - need to be removed or changed when model for handling orders is implemented
-            costCurrentOrder = costCurrentOrder + 100; //for test purposes - replace with calculation of cost when how orders are handled is implemented in model
-            view.populateRightPanel(currentOrderArray); //update left panel with new item - this takes a shortcut in updating the entire information in the panel not just adds to the end
+            costCurrentOrder = costCurrentOrder + currentOrderArray[nbrOfOrders].getCost();
+            view.populateRightPanel(currentOrderArrayString);
             view.setTextCostLabelRightPanel("Total cost of order: " + String.valueOf(costCurrentOrder)); //set the text to show cost of current order
+            nbrOfOrders++;
         }
+
 
     }
 
@@ -125,16 +125,34 @@ public class Controller {
         System.out.println("Index selection left panel: " + selectionIndex); //for test purposes  - remove when not needed
 
         if ((selectionIndex != -1) && currentLeftMenu==ButtonType.OrderHistory){
-            costCurrentOrder = 100; //for test purposes - replace with calculation of cost when how orders are handled is implemented in model
-            view.populateRightPanel(order1Simulation); //update left panel with order details - this takes a shortcut in updating the entire information in the panel not just adds to the end
+            for (int i = 0; i<orderHistoryArray[selectionIndex].length;i++){
+                if (orderHistoryArray[selectionIndex][i] != null){
+                    costCurrentOrder = costCurrentOrder + orderHistoryArray[selectionIndex][i].getCost();
+                }
+                else {
+                    break;
+                }
+            }
+            //for test purposes - replace with calculation of cost when how orders are handled is implemented in model
+            view.populateRightPanel(orderHistoryArrayString[selectionIndex]); //update left panel with order details - this takes a shortcut in updating the entire information in the panel not just adds to the end
             view.setTextCostLabelRightPanel("Total cost of order: " + String.valueOf(costCurrentOrder)); //set the text to show cost of current order
+
         }
+        costCurrentOrder = 0;
     }
 
     public void setToCakeMenu() {
         currentLeftMenu = ButtonType.Cake;
+        cakeMenuString[0] = Prinsesstårta.toString();
+        cakeMenuString[1] = Chokladtårta.toString();
+        cakeMenuString[2] = Gräddtårta.toString();
+
+        cakeMenuObject[0] = Prinsesstårta;
+        cakeMenuObject[1] = Chokladtårta;
+        cakeMenuObject[2] = Gräddtårta;
+
         view.populateLeftPanel(cakeMenuString);
-        view.populateRightPanel(currentOrderArray); //update left panel with new item - this takes a shortcut in updating the entire information in the panel not just adds to the end
+        view.populateRightPanel(currentOrderArrayString); //update left panel with new item - this takes a shortcut in updating the entire information in the panel not just adds to the end
         view.setTextCostLabelRightPanel("Total cost of order: " + String.valueOf(costCurrentOrder)); //set the text to show cost of current order
         view.enableAllButtons();
         view.disableCakeMenuButton();
@@ -143,8 +161,16 @@ public class Controller {
 
     public void setToPerUnitItemMenu() {
         currentLeftMenu = ButtonType.PerUnitItem;
+        perUnitItemMenuString[0] = Vetebulle.toString();
+        perUnitItemMenuString[1] = Pepparkaka.toString();
+        perUnitItemMenuString[2] = Hallongrotta.toString();
+
+        perUnitItemMenuObject[0] = Vetebulle;
+        perUnitItemMenuObject[1] = Pepparkaka;
+        perUnitItemMenuObject[2] = Hallongrotta;
+
         view.populateLeftPanel(perUnitItemMenuString);
-        view.populateRightPanel(currentOrderArray); //update left panel with new item - this takes a shortcut in updating the entire information in the panel not just adds to the end
+        view.populateRightPanel(currentOrderArrayString); //update left panel with new item - this takes a shortcut in updating the entire information in the panel not just adds to the end
         view.setTextCostLabelRightPanel("Total cost of order: " + String.valueOf(costCurrentOrder)); //set the text to show cost of current order
         view.enableAllButtons();
         view.disablePerUnitItemMenuButton();
@@ -154,22 +180,47 @@ public class Controller {
     public void setToOrderHistoryMenu() {
         currentLeftMenu = ButtonType.OrderHistory;
         view.clearRightPanel();
+
         view.populateLeftPanel(orderHistoryMenuString);
+
         view.enableAllButtons();
         view.disableAddMenuButton();
         view.disableOrderButton();
     }
 
+
     public void placeOrder() {
-        System.out.println("Pressed Order to create a new order"); //for test purposes - remove when not needed more
-        currentOrderArray = new String[10];  // for test purposes - remove when not needed more
+        nbrOfOrders = 0;
+        orderHistoryArray[number] = new Pastries[currentOrderArray.length];
+        for (int i = 0; i<currentOrderArray.length;i++){
+            orderHistoryArray[number][i] = currentOrderArray[i];
+        }
+        orderHistoryArrayString[number] = currentOrderArrayString;
+        orderHistoryMenuString[number] = "Order: " + (number+1) + " Price: " + costCurrentOrder;
+
+        currentOrderArray = new Pastries[10];
+        currentOrderArrayString = new String[10];
         costCurrentOrder = 0;
+        number++;
+
         view.clearRightPanel(); //Removes information from right panel in GUI
         view.setTextCostLabelRightPanel("TOTAL COST: 0");
         view.enableAllButtons();
         view.disableAddMenuButton();
         view.disableViewSelectedOrderButton();
     }
-
-
+    for (int i = 0; i<INPUT_ARRAY.length;i++){
+        if (INPUT_ARRAY[i] == null){
+            FYLL LISTAN;
+            return;
+        }
+        else{
+            NEW_ARRAY = (INPUT_ARRAY.length)*2;
+            for (int j = 0; j < INPUT_ARRAY.length;j++){
+                NEW_ARRAY[j] = INPUT_ARRAY[j];
+                return;
+            }
+            INPUT_ARRAY = NEW_ARRAY;
+        }
+    }
 }
