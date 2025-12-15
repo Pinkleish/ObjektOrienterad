@@ -8,15 +8,6 @@ public class PerUnitItems extends Pastries {
         createPerUnitItem(this);
     }
 
-    public void setCost(int cost){
-        this.cost = cost;
-    }
-    public String getName(){
-        return this.name;
-    }
-    public int getCost(){
-        return cost;
-    }
     public void createPerUnitItem(PerUnitItems perUnitItem){
         if(perUnitItem.getName().equals("Vetebulle")){
             perUnitItem.setCost(15);
@@ -32,7 +23,7 @@ public class PerUnitItems extends Pastries {
 
     @Override
     public String toString() {
-        return name + ", Price: " + cost;
+        return getName() + ", Price: " + getCost();
     }
 }
 

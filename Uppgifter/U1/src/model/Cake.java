@@ -3,52 +3,13 @@ package model;
 public class Cake extends Pastries{
     public Cake(String name){
         super(name);
-        this.cost = 100;
+        this.setCost(100);
         cakeCreate(this);
-
-
-    }
-    public Size getSize(){
-        return size;
-    }
-    public Filling getFilling1(){
-        return filling1;
     }
 
-    public Filling getFilling2(){
-        return filling2;
-    }
-
-    public Topping getTopping(){
-        return topping;
-    }
-
-    public String getName(){
-        return name;
-    }
     public void calculateCost(Cake cake){
-        this.cost += cost+ cake.topping.getToppingPrice()+ cake.filling1.getFillingPrice()+ cake.filling2.getFillingPrice()+ cake.size.getSizePrice();
+        this.setCost(cake.getCost() + cake.getTopping().getToppingPrice()+ cake.getFilling1().getFillingPrice()+ cake.getFilling2().getFillingPrice()+ cake.getSize().getSizePrice());
     }
-
-    public int getCost(){
-        return cost;
-    }
-
-    public void setFilling1(Filling filling1){
-        this.filling1 = filling1;
-    }
-    public void setFilling2(Filling filling2) {
-        this.filling2 = filling2;
-    }
-    public void setTopping(Topping topping) {
-        this.topping = topping;
-
-    }
-    public void setSize(Size size){
-        this.size = size;
-    }
-    //public Size getSize(){
-        //return Size.getSize();
 
 
     public void cakeCreate(Cake cake){
@@ -70,11 +31,17 @@ public class Cake extends Pastries{
             cake.setTopping(Topping.STROSSEL);
             cake.setSize(Size.SIZE12);
         }
+        /*else if (cake.getName().equals("HemskTårta")){
+            cake.setFilling1(Filling.VANILJKRAM);
+            cake.setFilling2(Filling.SYLT);
+            cake.setTopping(Topping.GRADDE);
+            cake.setSize(Size.SIZE4);
+        }*/
         calculateCost(cake);
     }
 
     @Override
     public String toString() {
-        return name + ", Slices: " + size + ", " + filling1 + ", " + filling2 + ", " + topping + ". Price: " + cost;
+        return getName() + ",  " + getSize() + ", " + getFilling1() + ", " + getFilling2() + ", " + getTopping() + ". Price: " + getCost();
     }
 }

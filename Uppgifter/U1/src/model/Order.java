@@ -3,7 +3,6 @@ package model;
 import java.util.ArrayList;
 
 public class Order {
-    private double cost = 0;
     private ArrayList<Pastries> pastries = new ArrayList<>();
 
 
