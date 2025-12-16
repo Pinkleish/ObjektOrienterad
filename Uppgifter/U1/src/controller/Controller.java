@@ -21,7 +21,6 @@ public class Controller {
     private Cake Prinsesstårta;
     private Cake Gräddtårta;
     private Cake Chokladtårta;
-    //private Cake HemskTårta;
     private PerUnitItems Vetebulle;
     private PerUnitItems Pepparkaka;
     private PerUnitItems Hallongrotta;
@@ -37,7 +36,6 @@ public class Controller {
         Prinsesstårta = new Cake("Prinsesstårta");
         Chokladtårta = new Cake("Chokladtårta");
         Gräddtårta = new Cake("Gräddtårta");
-        //HemskTårta = new Cake("HemskTårta");
         Vetebulle = new PerUnitItems("Vetebulle");
         Pepparkaka = new PerUnitItems("Pepparkaka");
         Hallongrotta = new PerUnitItems("Hallongrotta");
@@ -111,12 +109,10 @@ public class Controller {
         cakeMenuString[0] = Prinsesstårta.toString();
         cakeMenuString[1] = Chokladtårta.toString();
         cakeMenuString[2] = Gräddtårta.toString();
-        //cakeMenuString[3] = HemskTårta.toString();
 
         cakeMenuObject[0] = Prinsesstårta;
         cakeMenuObject[1] = Chokladtårta;
         cakeMenuObject[2] = Gräddtårta;
-        //cakeMenuObject[3] = HemskTårta;
 
         view.populateLeftPanel(cakeMenuString);
         view.populateRightPanel(currentOrder.toStringArray()); //update left panel with new item - this takes a shortcut in updating the entire information in the panel not just adds to the end
@@ -159,9 +155,12 @@ public class Controller {
     }
 
     public void placeOrder() {
+        if (currentOrder.getList().size() != 0){
+            orderHistory.add(currentOrder);
+            currentOrder = new Order();
+        }
 
-        orderHistory.add(currentOrder);
-        currentOrder = new Order();
+
 
         view.clearRightPanel(); //Removes information from right panel in GUI
         view.setTextCostLabelRightPanel("TOTAL COST: 0");

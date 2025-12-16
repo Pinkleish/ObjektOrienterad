@@ -6,6 +6,9 @@ public class Order {
     private ArrayList<Pastries> pastries = new ArrayList<>();
 
 
+    public ArrayList<Pastries> getList(){
+        return pastries;
+    }
 
     public void addToOrder(Pastries pastries){
         this.pastries.add(pastries);
