@@ -29,16 +29,6 @@ public class Controller {
 
 
     public Controller() {
-        perUnitItemMenuObject = new Pastries[3];
-        perUnitItemMenuString = new String[3];
-        cakeMenuObject = new Pastries[3];
-        cakeMenuString = new String[3];
-        Prinsesstårta = new Cake("Prinsesstårta");
-        Chokladtårta = new Cake("Chokladtårta");
-        Gräddtårta = new Cake("Gräddtårta");
-        Vetebulle = new PerUnitItems("Vetebulle");
-        Pepparkaka = new PerUnitItems("Pepparkaka");
-        Hallongrotta = new PerUnitItems("Hallongrotta");
         view = new MainFrame(1000, 500, this);
         view.enableAllButtons();
         view.disableAddMenuButton();
@@ -106,6 +96,11 @@ public class Controller {
 
     public void setToCakeMenu() {
         currentLeftMenu = ButtonType.Cake;
+        cakeMenuObject = new Pastries[3];
+        cakeMenuString = new String[3];
+        Prinsesstårta = new Cake("Prinsesstårta");
+        Chokladtårta = new Cake("Chokladtårta");
+        Gräddtårta = new Cake("Gräddtårta");
         cakeMenuString[0] = Prinsesstårta.toString();
         cakeMenuString[1] = Chokladtårta.toString();
         cakeMenuString[2] = Gräddtårta.toString();
@@ -124,6 +119,11 @@ public class Controller {
 
     public void setToPerUnitItemMenu() {
         currentLeftMenu = ButtonType.PerUnitItem;
+        perUnitItemMenuObject = new Pastries[3];
+        perUnitItemMenuString = new String[3];
+        Vetebulle = new PerUnitItems("Vetebulle");
+        Pepparkaka = new PerUnitItems("Pepparkaka");
+        Hallongrotta = new PerUnitItems("Hallongrotta");
         perUnitItemMenuString[0] = Vetebulle.toString();
         perUnitItemMenuString[1] = Pepparkaka.toString();
         perUnitItemMenuString[2] = Hallongrotta.toString();

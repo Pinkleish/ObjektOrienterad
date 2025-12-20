@@ -3,12 +3,12 @@ import Controller.Controller;
 
 import javax.swing.*;
 
-public class MainFrame extends JFrame {
+public class FrameOne extends JFrame {
     private MainPanel mainPanel;
     private Controller controller;
 
-    public MainFrame(int width, int height, Controller controller) {
-        super("Spel");
+    public FrameOne(int width, int height, Controller controller) {
+        super("Window one");
         this.controller = controller;
         this.setResizable(false);
         this.setSize(width, height);
