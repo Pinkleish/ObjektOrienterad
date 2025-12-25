@@ -5,10 +5,11 @@ public class Map {
     private String[][] map;
     private int nbrOfMysteries;
 
+
     // Konstruktorn skapar en ny map och kallar på tempoFillMap som fyller den med "O"
-    public Map(int height, int width){
+    public Map(int height, int width, String mapFiller){
         this.map = new String[height][width];
-        this.tempoFillMap();
+        this.tempoFillMap(mapFiller);
 
     }
 
@@ -36,16 +37,17 @@ public class Map {
 
 
     // TEMPORARY, KEEP AT THE BOTTOM - Fyller kartan med "O" för att lätt se den
-    public void tempoFillMap(){
+    public void tempoFillMap(String mapFiller){
         for (int i = 0; i< this.map.length; i++){
             for (int j = 0; j < this.map.length; j++){
-                this.map[i][j] =  "O";
+                this.map[i][j] =  mapFiller;
             }
         }
     }
-    public void setMysteries(){
+    public int setMysteries(){
         Random r = new Random();
         this.nbrOfMysteries = r.nextInt(5, 10);
+        return nbrOfMysteries;
 
     }
 }

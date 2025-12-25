@@ -5,7 +5,9 @@ public class PlayerPiece implements PlaceablePosition {
     private int playerPieceHeight;
     private int playerPieceWidth;
 
-    public PlayerPiece(){
+    public PlayerPiece(int playerPieceHeight, int playerPieceWidth){
+        this.playerPieceHeight = playerPieceHeight;
+        this.playerPieceWidth = playerPieceWidth;
     }
     
     // Måste inte height och width vara bestämt?

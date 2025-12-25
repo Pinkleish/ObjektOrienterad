@@ -2,76 +2,138 @@ package Controller;
 import Game.*;
 import view.FrameOne;
 
+import java.util.ArrayList;
+
 public class Controller {
     private FrameOne frameOne;
     private Map map;
     private Player playerOne;
+    private Player playerTwo;
     private Mystery mysteryOne;
+    private int nbrMysteries;
+    private ArrayList<Mystery> mysteries = new ArrayList<>();
+    private int Turn = 1;
+    String mysteryIcon = "?";
+    String mapEmpty = "O";
+    String playerOneIcon = "p";
+    String playerTwoIcon = "q";
 
 
 
     public Controller() {
         //frameOne = new FrameOne(300, 250, this);
-        map = new Map(8,8);
+        nbrMysteries = map.setMysteries();
+        generateMysteries(nbrMysteries);
+        map = new Map(8,8,mapEmpty);
         map.printMap();
-        playerOne = new Player("P");
+        playerOne = new Player(playerOneIcon);
+        playerTwo = new Player(playerTwoIcon);
         newPlayerPiece(playerOne,2,4);
         newPlayerPiece(playerOne,3,6);
         map.printMap();
-        mysteryOne = new Mystery("?");
+        mysteryOne = new Mystery(mysteryIcon);
         setMysteryLocation(mysteryOne,4,2);
         map.printMap();
-    }
 
-    // PROOF OF CONCEPT
-    public void newPlayerPiece(Player player, int height, int width){
-        // Kollar hur stor spelarens lista av pjäser är & om den är noll
-        int nbrOfPieces = player.getPlayerPieces().size();
-        if (nbrOfPieces == 0){
-            // Kallar på metoden som skapar nytt pjäs objekt och lägger till i spelarens lista av pjäser
-            player.addPlayerPiece();
-            // Assignar variablen "currentPiece" till det objekt i spelarens lista av pjäser som finns på samma index som nbrOfPieces
-            PlayerPiece currentPiece = player.getPlayerPieces().get(nbrOfPieces);
-            // Sparar pjäsens position med setters (de sparas i klassen PlayerPiece)
-            currentPiece.setPieceHeight(height);
-            currentPiece.setPieceWidth(width);
-            // Sätter positionen på mappen till spelarens ikon.
-            map.mapSetLocation(player.getIcon(), height, width);
+    }
+    public void playTurn(int turn){
+        if (turn % 2 == 0){
+            newPlayerPiece(playerOne,2,2);
+
         }
-        // Om storleken av spelarens lista av pjäser är större än noll:
         else{
-            // Uppdaterar nbrOfPieces
-            nbrOfPieces = player.getPlayerPieces().size();
-            // Assignar en "previousPiece" variabel
-            PlayerPiece previousPiece = player.getPlayerPieces().get(nbrOfPieces-1);
-            // Kollar om höjden/bredden vi angav i början är inom intervallet +-1 av förra pjäsens position (adjacent)
-            if ((previousPiece.getPieceHeight()-1 < height && height < previousPiece.getPieceHeight()+1) && (previousPiece.getPieceWidth()-1 < width && width < previousPiece.getPieceWidth()+1)){
-               // Kollar om valda platsen är ledig
-                if (map.getMap()[height][width].equals("O")){
-                    PlayerPiece currentPiece = player.getPlayerPieces().get(nbrOfPieces);
-                    currentPiece.setPieceHeight(height);
-                    currentPiece.setPieceWidth(width);
-                    map.mapSetLocation(player.getIcon(), height, width);
-                }
-                else{
-                    System.out.println("Pos. not empty");
-                }
-            }
-            else{
-                System.out.println("Pos. not adjacent to other Piece");
-            }
+            newPlayerPiece(playerTwo,2, 2);
         }
-
-        }
-    public void checkAdjacent(){
-        // Kolla runtom vald position efter en player icon
 
     }
+
+
+    public void newPlayerPiece(Player player, int height, int width){
+        if (checkVacant(height, width)) {
+
+            if (player.getPlayerPieces().isEmpty()) {
+                player.addPlayerPiece(height, width);
+                map.mapSetLocation(player.getIcon(), height, width);
+                map.printMap();
+                System.out.println("FOR TESTING: Placerade första pjäs");
+                Turn ++;
+                return;
+            }
+            if (checkAdjacent(height,width)){
+                player.addPlayerPiece(height, width);
+                map.mapSetLocation(player.getIcon(), height, width);
+                // TODO : En check om det blir överraskning
+                map.printMap();
+                System.out.println("FOR TESTING: Placerade en pjäs");
+                Turn ++;
+                return;
+            }
+
+        }
+        map.printMap();
+        System.out.println("Platsen inte tom");
+    }
+
+
+    public boolean checkVacant(int height, int width){
+        if (map.getMap()[height][width].equals(mapEmpty)){
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean checkAdjacent(int height, int width){
+        // Kolla runtom vald position efter en player icon
+        for (int i = -1;i <= 1; i++){
+            for (int j = -1; j <= 1; j++){
+                if (map.getMap()[height + i][width + j].equals(playerOneIcon) || (map.getMap()[height + i][width + j].equals(playerTwoIcon))){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean pieceIdentifyOpponent(Player player, int height, int width){
+        if (map.getMap()[height][width] != mapEmpty){
+            if (map.getMap()[height][width] != mysteryIcon){
+                if (map.getMap()[height][width] != player.getIcon()){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void checkSurprise(Player player, int height, int width){
+        // Kolla efter en motståndarpjäs
+        // Hittas en så ska du fortsätta kolla bredvid den pjäsen i samma riktning
+        // Stoppa när du hittar antingen en kant, en egen pjäs eller tom plats
+        for (int i = -1;i <= 1; i++){
+            for (int j = -1; j <= 1; j++) {
+                if (pieceIdentifyOpponent(player ,height + i,width + j)){
+
+                }
+            }
+        }
+    }
+
+
     // PROOF OF CONCEPT
     public void setMysteryLocation(Mystery mystery, int height, int width){
         map.mapSetLocation(mystery.getMysteryIcon(), height, width);
         mystery.setPieceHeight(height);
         mystery.setPieceWidth(width);
+    }
+
+    public void generateMysteries(int number){
+        for(int i = 0; i < number; i ++){
+            Mystery k = new Mystery(mysteryIcon);
+            mysteries.add(k);
+
+        }
+
     }
 
 }
