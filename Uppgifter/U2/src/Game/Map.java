@@ -6,6 +6,7 @@ public class Map {
     private String[][] map;
     private int nbrOfMysteries;
     private ArrayList<Mystery> mysteries = new ArrayList<>();
+    private String mysteryIcon;
 
 
     // Konstruktorn skapar en ny map och kallar på tempoFillMap som fyller den med "O"
@@ -13,8 +14,10 @@ public class Map {
         this.map = new String[height][width];
         this.tempoFillMap(mapFiller);
 
-        this.nbrOfMysteries = setMysteries();
-        generateMysteries(nbrOfMysteries);
+
+        //this.nbrOfMysteries = setMysteries();
+        //generateMysteries(nbrOfMysteries);
+        //fillMysteries(nbrOfMysteries);
 
     }
 
@@ -49,7 +52,21 @@ public class Map {
             }
         }
     }
-    public void fillMysteries(){
+    public void fillMysteries(int number){
+        Random p = new Random();
+        for (int i = 0; i <= number; i++){
+            int temp = p.nextInt(0,7);
+            int temp2 = p.nextInt(0,7);
+            mapSetLocation("?", temp, temp2);
+            generateMysteries(nbrOfMysteries);
+            mysteries.get(i).setPieceHeight(temp);
+            mysteries.get(i).setPieceWidth(temp2);
+
+
+        }
+
+
+
 
     }
     public int setMysteries(){
@@ -69,4 +86,26 @@ public class Map {
         }
 
     }
+
+
+    public void checkMystery(Player player, int height, int width){
+        if (map[height][width] == mysteryIcon){
+            System.out.println("Mystery found!");
+            for(int i = 0; i < mysteries.size(); i ++){
+                if(mysteries.get(i).getPieceHeight() == height && mysteries.get(i).getPieceWidth() == width){
+
+                }
+
+            }
+
+
+
+        }
+
+
+    }
+
+
+
+
 }

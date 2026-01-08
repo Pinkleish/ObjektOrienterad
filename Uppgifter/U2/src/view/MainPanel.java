@@ -10,5 +10,6 @@ public class MainPanel extends JPanel {
         super(null);
         this.setSize(width, height);
 
+
     }
 }

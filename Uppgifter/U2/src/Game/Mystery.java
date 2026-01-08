@@ -1,7 +1,7 @@
 package Game;
 import java.util.Random;
 
-public class Mystery implements PlaceablePosition, PlaceableIcon {
+public class Mystery implements PlaceablePosition{
     private String mysteryIcon;
     private int mysteryHeight;
     private int mysteryWidth;
@@ -26,9 +26,9 @@ public class Mystery implements PlaceablePosition, PlaceableIcon {
                 // Skippar motståndarens tur
                 break;
             case 2:
-                this.mysteryName = "Narcissus";
+                this.mysteryName = "Demagog";
                 setID(2);
-                // Skippar din tur
+                //Alla platser runt om dig blir till motståndarens. Förutom mysteriumets.
                 break;
             case 3:
                 this.mysteryName = "AdditivaMetoder";
@@ -44,11 +44,6 @@ public class Mystery implements PlaceablePosition, PlaceableIcon {
                 this.mysteryName = "Avgrundsvrål";
                 setID(5);
                 // Alla pjäser försvinner runt dig.
-                break;
-            case 6:
-                this.mysteryName = "Demagog";
-                setID(6);
-                // Alla platser runt om dig blir till motståndarens. Förutom mysteriumets.
                 break;
         }
         return mysteryName;
@@ -96,6 +91,22 @@ public class Mystery implements PlaceablePosition, PlaceableIcon {
     @Override
     public String getIcon() {
         return this.mysteryIcon;
+    }
+
+
+    public void executeMystery(int num){
+        switch(num) {
+            case 1:
+                System.out.print("Tidshopp");
+                break;
+            case 2:
+                System.out.print("Demagog");
+                break;
+            case 3:
+                System.out.println("AdditivaMetoder");
+                break;
+        }
+
     }
 
 }

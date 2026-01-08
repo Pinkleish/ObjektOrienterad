@@ -3,7 +3,7 @@ package Game;
 
 import java.util.ArrayList;
 
-public class Player implements PlaceableIcon{
+public class Player {
     // Har en icon, en lista av placerade pjäser & poäng(inte implementerat än)
     private String playerIcon;
     private ArrayList<PlayerPiece> playerPieces = new ArrayList<>();
@@ -15,7 +15,7 @@ public class Player implements PlaceableIcon{
     }
     // Skapar nytt PlayerPiece objekt & sparar det i spelarens playerPieces lista
     public void addPlayerPiece(int height, int width,int ID){
-        PlayerPiece playerPiece = new PlayerPiece(height, width);
+        PlayerPiece playerPiece = new PlayerPiece(height, width,playerIcon);
         playerPieces.add(playerPiece);
     }
 
@@ -24,14 +24,9 @@ public class Player implements PlaceableIcon{
         return playerPieces;
     }
 
-
-    @Override
-    public void setIcon(String icon) {
-        this.playerIcon = icon;
-    }
-
-    @Override
-    public String getIcon() {
+    public String getPlayerIcon(){
         return this.playerIcon;
     }
+
+
 }
