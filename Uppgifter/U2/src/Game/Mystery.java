@@ -6,13 +6,15 @@ public class Mystery implements PlaceablePosition, PlaceableIcon {
     private int mysteryHeight;
     private int mysteryWidth;
     private String mysteryName;
+    private int mysteryID;
 
 
     public Mystery(String mysteryIcon) {
         Random r = new Random();
         int selectedMystery = r.nextInt(1, 7);
-        setMysteryName(selectedMystery);
+        this.mysteryName = setMysteryName(selectedMystery);
         this.mysteryIcon = mysteryIcon;
+
     }
 
 
@@ -20,22 +22,33 @@ public class Mystery implements PlaceablePosition, PlaceableIcon {
         switch (number) {
             case 1:
                 this.mysteryName = "Tidshopp";
-
+                setID(1);
+                // Skippar motståndarens tur
                 break;
             case 2:
                 this.mysteryName = "Narcissus";
+                setID(2);
+                // Skippar din tur
                 break;
             case 3:
                 this.mysteryName = "AdditivaMetoder";
+                setID(3);
+                // Alla platser fylls med dina pjäser. Förutom diagonalt.
                 break;
             case 4:
                 this.mysteryName = "Multiplicitet";
+                setID(4);
+                // Platserna diagonalt samt i mitten fylls med dina pjäser.
                 break;
             case 5:
                 this.mysteryName = "Avgrundsvrål";
+                setID(5);
+                // Alla pjäser försvinner runt dig.
                 break;
             case 6:
                 this.mysteryName = "Demagog";
+                setID(6);
+                // Alla platser runt om dig blir till motståndarens. Förutom mysteriumets.
                 break;
         }
         return mysteryName;
@@ -60,6 +73,15 @@ public class Mystery implements PlaceablePosition, PlaceableIcon {
     @Override
     public int getPieceWidth() {
         return mysteryWidth;
+    }
+
+
+    public int getID() {
+        return this.mysteryID;
+    }
+
+    public void setID(int ID) {
+        this.mysteryID = ID;
     }
 
     public String getMysteryIcon(){

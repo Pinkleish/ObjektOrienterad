@@ -22,18 +22,28 @@ public class Controller {
 
     public Controller() {
         //frameOne = new FrameOne(300, 250, this);
-        nbrMysteries = map.setMysteries();
-        generateMysteries(nbrMysteries);
-        map = new Map(8,8,mapEmpty);
-        map.printMap();
         playerOne = new Player(playerOneIcon);
         playerTwo = new Player(playerTwoIcon);
-        newPlayerPiece(playerOne,2,4);
-        newPlayerPiece(playerOne,3,6);
-        map.printMap();
+        map = new Map(8,8,mapEmpty);
         mysteryOne = new Mystery(mysteryIcon);
-        setMysteryLocation(mysteryOne,4,2);
+        Turn turn = new Turn();
+
+        System.out.println("TEST: ny map");
+
         map.printMap();
+        generateMysteries(map.getNbrOfMysteries());
+
+        newPlayerPiece(playerOne,2,4);
+        newPlayerPiece(playerTwo,3,6);
+        newPlayerPiece(playerTwo,3,7);// prova ändra till p1
+        newPlayerPiece(playerTwo,3,5);
+        newPlayerPiece(playerOne,3,4);
+
+        newPlayerPiece(playerOne,6,6);// borde inte fungera
+
+
+        setMysteryLocation(mysteryOne,4,2);
+
 
     }
     public void playTurn(int turn){
@@ -52,7 +62,7 @@ public class Controller {
         if (checkVacant(height, width)) {
 
             if (player.getPlayerPieces().isEmpty()) {
-                player.addPlayerPiece(height, width);
+                player.addPlayerPiece(height, width,player.getPlayerPieces().size());
                 map.mapSetLocation(player.getIcon(), height, width);
                 map.printMap();
                 System.out.println("FOR TESTING: Placerade första pjäs");
@@ -60,13 +70,17 @@ public class Controller {
                 return;
             }
             if (checkAdjacent(height,width)){
-                player.addPlayerPiece(height, width);
+                player.addPlayerPiece(height, width,player.getPlayerPieces().size());
                 map.mapSetLocation(player.getIcon(), height, width);
                 // TODO : En check om det blir överraskning
+                checkSurprise(player,height,width);
                 map.printMap();
                 System.out.println("FOR TESTING: Placerade en pjäs");
                 Turn ++;
                 return;
+            }
+            else{
+                System.out.println("Kunde inte placera pjäs");
             }
 
         }
@@ -87,7 +101,35 @@ public class Controller {
         // Kolla runtom vald position efter en player icon
         for (int i = -1;i <= 1; i++){
             for (int j = -1; j <= 1; j++){
-                if (map.getMap()[height + i][width + j].equals(playerOneIcon) || (map.getMap()[height + i][width + j].equals(playerTwoIcon))){
+                if (((height+i) < (map.getMap().length) && (height+i) >= 0) && (width+j) < (map.getMap()[i].length) && (width+j) >= 0){
+                    if (map.getMap()[height + i][width + j].equals(playerOneIcon) || (map.getMap()[height + i][width + j].equals(playerTwoIcon))) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public int pieceIdentify(Player player, int height, int width) {
+
+            if (map.getMap()[height][width] != mapEmpty) {
+                if (map.getMap()[height][width] != mysteryIcon) {
+                    if (map.getMap()[height][width] != player.getIcon()) {
+                        return 1;
+                    } else {
+                        return 2;
+                    }
+                }
+            }
+        return 0;
+    }
+    public boolean checkSurpriseValidity(Player player, int height, int width, int i, int j) {
+        if (pieceIdentify(player, height + i, width + j) == 1) {
+            while (true) {
+                height += i;
+                width += j;
+                if (pieceIdentify(player, height + i, width + j) == 2) {
                     return true;
                 }
             }
@@ -95,25 +137,23 @@ public class Controller {
         return false;
     }
 
-    public boolean pieceIdentifyOpponent(Player player, int height, int width){
-        if (map.getMap()[height][width] != mapEmpty){
-            if (map.getMap()[height][width] != mysteryIcon){
-                if (map.getMap()[height][width] != player.getIcon()){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
-    public void checkSurprise(Player player, int height, int width){
+
+    public void checkSurprise(Player player, int height, int width) {
         // Kolla efter en motståndarpjäs
         // Hittas en så ska du fortsätta kolla bredvid den pjäsen i samma riktning
         // Stoppa när du hittar antingen en kant, en egen pjäs eller tom plats
-        for (int i = -1;i <= 1; i++){
+for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                if (pieceIdentifyOpponent(player ,height + i,width + j)){
-
+                try {
+                    if (checkSurpriseValidity(player, height, width, i, j)) {
+                        System.out.println("Valid surprise");
+                    } else {
+                        System.out.println("Invalid surprise");
+                    }
+                }
+                catch (ArrayIndexOutOfBoundsException e){
+                    System.out.println("Check surprise out of bounds");
                 }
             }
         }

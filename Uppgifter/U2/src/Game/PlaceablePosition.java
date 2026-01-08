@@ -2,9 +2,12 @@ package Game;
 
 public interface PlaceablePosition {
 
-    public abstract void setPieceHeight(int height);
-    public abstract void setPieceWidth(int width);
-    public abstract int getPieceHeight();
-    public abstract int getPieceWidth();
+    public void setPieceHeight(int height);
+    public void setPieceWidth(int width);
+    public int getPieceHeight();
+    public int getPieceWidth();
+    public int getID();
+    public void setID(int ID);
+
 
 }

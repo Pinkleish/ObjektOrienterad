@@ -1,15 +1,20 @@
 package Game;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Map {
     private String[][] map;
     private int nbrOfMysteries;
+    private ArrayList<Mystery> mysteries = new ArrayList<>();
 
 
     // Konstruktorn skapar en ny map och kallar på tempoFillMap som fyller den med "O"
     public Map(int height, int width, String mapFiller){
         this.map = new String[height][width];
         this.tempoFillMap(mapFiller);
+
+        this.nbrOfMysteries = setMysteries();
+        generateMysteries(nbrOfMysteries);
 
     }
 
@@ -44,10 +49,24 @@ public class Map {
             }
         }
     }
+    public void fillMysteries(){
+
+    }
     public int setMysteries(){
         Random r = new Random();
-        this.nbrOfMysteries = r.nextInt(5, 10);
+        int temp = r.nextInt(5, 10);
+        return temp;
+
+    }
+    public int getNbrOfMysteries(){
         return nbrOfMysteries;
+    }
+    public void generateMysteries(int number){
+        for(int i = 0; i < number; i ++){
+            Mystery k = new Mystery("mysteryIcon");
+            mysteries.add(k);
+
+        }
 
     }
 }

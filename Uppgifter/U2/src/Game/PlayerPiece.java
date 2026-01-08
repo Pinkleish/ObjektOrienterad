@@ -4,6 +4,7 @@ public class PlayerPiece implements PlaceablePosition {
 
     private int playerPieceHeight;
     private int playerPieceWidth;
+    private int playerID;
 
     public PlayerPiece(int playerPieceHeight, int playerPieceWidth){
         this.playerPieceHeight = playerPieceHeight;
@@ -11,6 +12,7 @@ public class PlayerPiece implements PlaceablePosition {
     }
     
     // Måste inte height och width vara bestämt?
+
 
     @Override
     public void setPieceHeight(int height) {
@@ -30,5 +32,15 @@ public class PlayerPiece implements PlaceablePosition {
     @Override
     public int getPieceWidth() {
         return playerPieceWidth;
+    }
+
+    @Override
+    public int getID() {
+        return this.playerID;
+    }
+
+    @Override
+    public void setID(int ID) {
+        this.playerID = ID;
     }
 }

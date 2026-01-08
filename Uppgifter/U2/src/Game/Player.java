@@ -14,7 +14,7 @@ public class Player implements PlaceableIcon{
         this.playerIcon = playerIcon;
     }
     // Skapar nytt PlayerPiece objekt & sparar det i spelarens playerPieces lista
-    public void addPlayerPiece(int height, int width){
+    public void addPlayerPiece(int height, int width,int ID){
         PlayerPiece playerPiece = new PlayerPiece(height, width);
         playerPieces.add(playerPiece);
     }
