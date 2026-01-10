@@ -18,6 +18,7 @@ import java.util.Objects;
 // rad 247 & 261 i controller har olika "if statement" men verkar göra samma sak? Går det att göra till en enda metod?
 // demagog1 ersatte inte vänster position med en fiende pjäs då det redan fanns en spelare1 pjäs - FIXAT
 // Testat så att överraskning funkar i ALLA riktningar SAMTIDIGT, det funkade :)
+// Massivt ändrat hur GUI hierarkin fungerar
 
 
 public class Controller {
@@ -38,38 +39,26 @@ public class Controller {
 
 
     public Controller() {
-
-        frameOne = new FrameOne(750, 750, this);
-
         playerOne = new Player(playerOneIcon);
         playerTwo = new Player(playerTwoIcon);
         map = new Map(8,8,mapEmpty);
         turn = new Turn();
+        frameOne = new FrameOne(map.getHeight(),map.getWidth(), 750,750, this);
 
         nbrMysteriesTotal = map.getNbrOfMysteries();
         nbrOfPiecesTotal = countTurns(map);
         turn.checkTurn();
 
-        // Test av överraskning i alla riktningar
-        for (int i = -1;i <= 1; i++){
-            for (int j = -1; j <= 1; j++) {
-                if (i == 0 && j== 0){
-                    map.mapSetLocation(" ",5+i,5+j);
-                }
-                else{
-                    map.mapSetLocation(playerTwoIcon,5+i,5+j);
-                    map.mapSetLocation(playerOneIcon,5+(2*i),5+(2*j));
-                }
-
-            }
-        }
-
         System.out.println("TEST: ny map");
         map.printMap();
 
 
-        frameOne.createGUI(8,8, map.getMap());
-        frameOne.setColorMap(map.getMap());
+        for (int row = 0; row < map.getHeight(); row++) {
+            for (int col = 0; col < map.getWidth(); col++) {
+                frameOne.updateMapPosition(map.getValue(row, col), row, col);
+            }
+        }
+
 
     }
 

@@ -8,67 +8,37 @@ import java.awt.event.ActionListener;
 
 public class FrameOne extends JFrame {
     private MainPanel mainPanel;
-    private LeftPanel leftPanel;
-    private RightPanel rightPanel;
+    //private LeftPanel leftPanel;
+    //private RightPanel rightPanel;
     private BottomPanel bottomPanel;
-    private Controller controller;
-    private JButton[][] buttons;
 
-    public FrameOne(int width, int height, Controller controller) {
+
+    public FrameOne(int row, int col,int width, int height,Controller controller) {
         super("Window one");
-        this.controller = controller;
-        this.setResizable(false);
-        this.setSize(width, height);
-        this.mainPanel = new MainPanel(width, height, this);
-        this.setContentPane(mainPanel);
-        this.setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(8,8));
+        setLayout(new BorderLayout());
+        this.setResizable(false);
+
+        this.mainPanel = new MainPanel(height, width, this,controller);
+        mainPanel.setPreferredSize(new Dimension(750, 750));
+        this.add(mainPanel,BorderLayout.CENTER);
+
+        this.bottomPanel = new BottomPanel(this);
+        bottomPanel.setPreferredSize(new Dimension(600, 50));
+        this.add(bottomPanel,BorderLayout.SOUTH);
+
+        mainPanel.createGUI(row,col);
+        mainPanel.setColorMap(row,col);
+
+        pack();
+        setLocationRelativeTo(null);
+        this.setVisible(true);
 
 
     }
-    public void createGUI(int height,int width,String[][] map){
-        buttons = new JButton[height][width];
-        for (int i = 0; i < buttons.length;i++){
-            for (int j = 0; j < buttons[0].length;j++){
-                final int height_pressed = i;
-                final int width_pressed = j;
-                buttons[i][j] = new JButton(map[i][j]);
-                buttons[i][j].setFont(new Font("Arial", Font.PLAIN, 40));
-                buttons[i][j].addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("Position: " + height_pressed + "," + width_pressed + " pressed");
-                        controller.buttonPressed(height_pressed,width_pressed);
-                    }
-                });
-                this.add(buttons[i][j]);
-            }
-        }
-        this.revalidate();
-        this.repaint();
-    }
-    public void updateMapPosition(String string,int height,int width){
-        buttons[height][width].setText(string);
-
-
+    public void updateMapPosition(String text, int row, int col) {
+        mainPanel.updateMapPosition(text, row, col);
     }
 
-    public void setColorMap(String[][] map){
-        int p = -1;
-        for(int row = 0; row < map.length; row ++){
-            p++;
-            for(int col = 0; col < map.length; col ++){
-
-                if((col+p) % 2 == 0){
-                    buttons[row][col].setBackground(Color.yellow);
-                }
-                if((col+p) % 2 == 1){
-                    buttons[row][col].setBackground(Color.white);
-
-                }
-            }
-        }
-    }
 
 }

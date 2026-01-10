@@ -7,19 +7,34 @@ public class Map {
     private int nbrOfMysteries;
     private ArrayList<Mystery> mysteries = new ArrayList<>();
     private String mysteryIcon;
+    private int height;
+    private int width;
 
 
     // Konstruktorn skapar en ny map och kallar på tempoFillMap som fyller den med "O"
     public Map(int height, int width, String mapFiller) {
+        this.height = height;
+        this.width = width;
         this.map = new String[height][width];
         this.tempoFillMap(mapFiller);
 
 
         this.nbrOfMysteries = setMysteries();
 
-        //fillMysteries(this.nbrOfMysteries);
-        //generateMysteries(this.nbrOfMysteries);
+        fillMysteries(this.nbrOfMysteries);
 
+
+    }
+
+    public int getHeight(){
+        return this.height;
+    }
+
+    public int getWidth(){
+        return this.width;
+    }
+    public String getValue(int row,int col){
+        return map[row][col];
     }
 
     // Simpel getter för mappen
