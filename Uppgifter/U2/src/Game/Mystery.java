@@ -9,9 +9,9 @@ public class Mystery implements PlaceablePosition{
     private int mysteryID;
 
 
-    public Mystery(String mysteryIcon) {
+    public Mystery() {
         Random r = new Random();
-        int selectedMystery = r.nextInt(1, 7);
+        int selectedMystery = r.nextInt(1, 4);
         this.mysteryName = setMysteryName(selectedMystery);
         this.mysteryIcon = mysteryIcon;
 
@@ -22,33 +22,24 @@ public class Mystery implements PlaceablePosition{
         switch (number) {
             case 1:
                 this.mysteryName = "Tidshopp";
-                setID(1);
+                this.setID(1);
                 // Skippar motståndarens tur
                 break;
             case 2:
-                this.mysteryName = "Demagog";
-                setID(2);
+                this.mysteryName = "AdditivaMetoder";
+                this.setID(2);
                 //Alla platser runt om dig blir till motståndarens. Förutom mysteriumets.
                 break;
             case 3:
-                this.mysteryName = "AdditivaMetoder";
-                setID(3);
-                // Alla platser fylls med dina pjäser. Förutom diagonalt.
+                this.mysteryName = "Demagog";
+                this.setID(3);
                 break;
-            case 4:
-                this.mysteryName = "Multiplicitet";
-                setID(4);
-                // Platserna diagonalt samt i mitten fylls med dina pjäser.
-                break;
-            case 5:
-                this.mysteryName = "Avgrundsvrål";
-                setID(5);
-                // Alla pjäser försvinner runt dig.
-                break;
-        }
-        return mysteryName;
 
+
+        }
+        return this.mysteryName;
     }
+
 
     @Override
     public void setPieceHeight(int height) {
@@ -94,19 +85,6 @@ public class Mystery implements PlaceablePosition{
     }
 
 
-    public void executeMystery(int num){
-        switch(num) {
-            case 1:
-                System.out.print("Tidshopp");
-                break;
-            case 2:
-                System.out.print("Demagog");
-                break;
-            case 3:
-                System.out.println("AdditivaMetoder");
-                break;
-        }
 
-    }
 
 }

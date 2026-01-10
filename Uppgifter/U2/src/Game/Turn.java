@@ -7,12 +7,13 @@ public class Turn {
 
 
     public Turn(){
-        counter = startingTurn();
+        //counter = startingTurn();
+        this.counter = 0;
 
     }
     public int playTurn(){
-        counter++;
-        return counter;
+        this.counter += 1;
+        return this.counter;
     }
 
     public int checkTurn(){

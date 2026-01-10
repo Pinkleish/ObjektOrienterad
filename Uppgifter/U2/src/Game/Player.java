@@ -28,5 +28,15 @@ public class Player {
         return this.playerIcon;
     }
 
+    public void setScore(){
+        playerScore ++;
+
+    }
+
+    public int getScore(){
+        return this.playerScore;
+
+    }
+
 
 }
