@@ -14,7 +14,7 @@ public class FrameOne extends JFrame {
 
 
     public FrameOne(int row, int col,int width, int height,Controller controller) {
-        super("Window one");
+        super("Omvävlning");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         this.setResizable(false);
@@ -23,7 +23,7 @@ public class FrameOne extends JFrame {
         mainPanel.setPreferredSize(new Dimension(750, 750));
         this.add(mainPanel,BorderLayout.CENTER);
 
-        this.bottomPanel = new BottomPanel(this);
+        this.bottomPanel = new BottomPanel(height,width,this);
         bottomPanel.setPreferredSize(new Dimension(600, 50));
         this.add(bottomPanel,BorderLayout.SOUTH);
 
@@ -38,6 +38,12 @@ public class FrameOne extends JFrame {
     }
     public void updateMapPosition(String text, int row, int col) {
         mainPanel.updateMapPosition(text, row, col);
+    }
+    public void populateLiveFeed(String string){
+        bottomPanel.populateLiveFeed(string);
+    }
+    public void clearLiveFeed(){
+        bottomPanel.clearLiveFeed();
     }
 
 

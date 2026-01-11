@@ -19,6 +19,10 @@ import java.util.Objects;
 // demagog1 ersatte inte vänster position med en fiende pjäs då det redan fanns en spelare1 pjäs - FIXAT
 // Testat så att överraskning funkar i ALLA riktningar SAMTIDIGT, det funkade :)
 // Massivt ändrat hur GUI hierarkin fungerar
+// Lagt till metoder för att populateLiveFeed - här kommer all ny information som är visentlig till spelaren till GUIn
+// Lagt till metoder för att visa Spelare 1 & 2 Score
+// Om demagog eller additiva metoder sätter en pjäs på ett annat mysterium så tas det mysterium inte bort från nbrofmyseries - fixat
+// Vinst för alla mysterium tagna känns nu igen korrekt av spelet och printas till terminal & GUI
 
 
 public class Controller {
@@ -41,7 +45,7 @@ public class Controller {
     public Controller() {
         playerOne = new Player(playerOneIcon);
         playerTwo = new Player(playerTwoIcon);
-        map = new Map(8,8,mapEmpty);
+        map = new Map(8,8,mapEmpty,mysteryIcon);
         turn = new Turn();
         frameOne = new FrameOne(map.getHeight(),map.getWidth(), 750,750, this);
 
@@ -80,6 +84,8 @@ public class Controller {
         if (checkVacant(height, width) > 0) {
 
             if (player.getPlayerPieces().isEmpty()) {
+                frameOne.clearLiveFeed();
+                frameOne.populateLiveFeed("player " + player.getPlayerIcon() + " placerade sin första pjäs");
                 player.addPlayerPiece(height, width, player.getPlayerPieces().size());
                 checkMystery(player,height,width);
                 setIconMapAndGUI(player.getPlayerIcon(),height,width);
@@ -89,6 +95,8 @@ public class Controller {
                 return;
             }
             if (checkAdjacent(height, width)) {
+                frameOne.clearLiveFeed();
+                frameOne.populateLiveFeed("player " + player.getPlayerIcon() + " placerade en pjäs");
                 player.addPlayerPiece(height, width, player.getPlayerPieces().size());
                 checkSurprise(player, height, width);
                 checkMystery(player,height,width);
@@ -99,11 +107,13 @@ public class Controller {
                 return;
             } else {
                 System.out.println("Kunde inte placera pjäs");
+                frameOne.populateLiveFeed("Kunde inte placera pjäs");
                 return;
             }
         }
         map.printMap();
         System.out.println("Platsen inte tom");
+        frameOne.populateLiveFeed("Platsen inte ledig");
     }
 
     public int checkVacant(int height, int width){
@@ -178,9 +188,6 @@ public class Controller {
 
 
     public void checkSurprise(Player player, int height, int width) {
-        // Kolla efter en motståndarpjäs
-        // Hittas en så ska du fortsätta kolla bredvid den pjäsen i samma riktning
-        // Stoppa när du hittar antingen en kant, en egen pjäs eller tom plats
             for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 try {
@@ -210,6 +217,7 @@ public class Controller {
             }
             if (nbrMysteriesTotal == 0){
                 System.out.print("Spelet avslutat");
+                frameOne.populateLiveFeed("Spelet avslutat!");
                 countScore(map);
             }
 
@@ -223,49 +231,76 @@ public class Controller {
                     // Ska skippa en tur
                     turn.playTurn();
                     System.out.print("Tidshopp");
+                    frameOne.populateLiveFeed("player "+ player.getPlayerIcon() + " Has activated Tidshopp!");
                     break;
                 case 2:
                     // Platserna ovanför, nedanför, till vänster, samt i mitten fylls med dina pjäser.
-                    //map.mapSetLocation(player.getPlayerIcon(),height + 1,width); //
+                    if (checkVacant(height +1, width) == 1){
+                        nbrMysteriesTotal--;
+                    }
                     setIconMapAndGUI(player.getPlayerIcon(),height +1 ,width);// under
-                   // map.mapSetLocation(player.getPlayerIcon(),height + -1,width);
+                    if (checkVacant(height -1, width) == 1) {
+                        nbrMysteriesTotal--;
+                    }
                     setIconMapAndGUI(player.getPlayerIcon(),height -1,width);// ovanför
-                    //map.mapSetLocation(player.getPlayerIcon(),height,width - 1);
+                    if (checkVacant(height, width-1) == 1) {
+                        nbrMysteriesTotal--;
+                    }
                     setIconMapAndGUI(player.getPlayerIcon(),height,width -1);// vänster
-                    //map.mapSetLocation(player.getPlayerIcon(),height,width + 1);
+                    if (checkVacant(height , width+1) == 1) {
+                        nbrMysteriesTotal--;
+                    }
                     setIconMapAndGUI(player.getPlayerIcon(),height,width +1);// höger
-                    //map.mapSetLocation(player.getPlayerIcon(),height,width);
                     setIconMapAndGUI(player.getPlayerIcon(),height,width); // mitten
+
                     System.out.print("AdditivaMetoder");
+                    frameOne.populateLiveFeed("player "+ player.getPlayerIcon() + " Has activated AdditivaMetoder!");
                     break;
                 case 3:
                     // Mysteriets pjäs blir spelaren. Resten runt omkring blir motståndarens.
                     if(player.getPlayerIcon().equals(playerOneIcon)){
-                        //map.mapSetLocation(playerTwoIcon,height + 1,width);
+                        if (checkVacant(height +1, width) == 1) {
+                            nbrMysteriesTotal--;
+                        }
                         setIconMapAndGUI(playerTwoIcon,height +1 ,width); // under
-                        //map.mapSetLocation(playerTwoIcon,height - 1,width);
+                        if (checkVacant(height -1, width) == 1) {
+                            nbrMysteriesTotal--;
+                        }
                         setIconMapAndGUI(playerTwoIcon,height -1,width);// ovanför
-                        //map.mapSetLocation(playerTwoIcon,height,width -1);
+                        if (checkVacant(height , width-1) == 1) {
+                            nbrMysteriesTotal--;
+                        }
                         setIconMapAndGUI(playerTwoIcon,height,width -1);// vänster
-                        //map.mapSetLocation(playerTwoIcon,height,width + 1);
+                        if (checkVacant(height , width+1) == 1) {
+                            nbrMysteriesTotal--;
+                        }
                         setIconMapAndGUI(playerTwoIcon,height,width +1);// höger
-                        //map.mapSetLocation(playerOneIcon,height,width);
                         setIconMapAndGUI(playerOneIcon,height,width); // mitten
                         System.out.println("Demagog1");
+                        frameOne.populateLiveFeed("player "+ player.getPlayerIcon() + " Has activated demagog!");
+
 
                     }
                     else if(player.getPlayerIcon().equals(playerTwoIcon)){
-                        //map.mapSetLocation(playerTwoIcon,height + 1,width);
+                        if (checkVacant(height +1, width) == 1) {
+                            nbrMysteriesTotal--;
+                        }
                         setIconMapAndGUI(playerOneIcon,height +1 ,width); // under
-                        //map.mapSetLocation(playerTwoIcon,height - 1,width);
+                        if (checkVacant(height -1, width) == 1) {
+                            nbrMysteriesTotal--;
+                        }
                         setIconMapAndGUI(playerOneIcon,height -1,width);// ovanför
-                        //map.mapSetLocation(playerTwoIcon,height,width -1);
+                        if (checkVacant(height , width-1) == 1) {
+                            nbrMysteriesTotal--;
+                        }
                         setIconMapAndGUI(playerOneIcon,height,width -1);// vänster
-                        //map.mapSetLocation(playerTwoIcon,height,width + 1);
+                        if (checkVacant(height , width+1) == 1) {
+                            nbrMysteriesTotal--;
+                        }
                         setIconMapAndGUI(playerOneIcon,height,width +1);// höger
-                        //map.mapSetLocation(playerOneIcon,height,width);
                         setIconMapAndGUI(playerTwoIcon,height,width); // mitten
                         System.out.println("Demagog2");
+                        frameOne.populateLiveFeed("player "+ player.getPlayerIcon() + " Has activated demagog!");
 
                     }
 

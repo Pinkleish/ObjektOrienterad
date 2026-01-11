@@ -9,7 +9,7 @@ public class Mystery implements PlaceablePosition{
     private int mysteryID;
 
 
-    public Mystery() {
+    public Mystery(String mysteryIcon) {
         Random r = new Random();
         int selectedMystery = r.nextInt(1, 4);
         this.mysteryName = setMysteryName(selectedMystery);

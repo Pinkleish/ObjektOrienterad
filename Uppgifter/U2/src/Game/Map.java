@@ -12,7 +12,7 @@ public class Map {
 
 
     // Konstruktorn skapar en ny map och kallar på tempoFillMap som fyller den med "O"
-    public Map(int height, int width, String mapFiller) {
+    public Map(int height, int width, String mapFiller,String mysteryIcon) {
         this.height = height;
         this.width = width;
         this.map = new String[height][width];
@@ -21,7 +21,7 @@ public class Map {
 
         this.nbrOfMysteries = setMysteries();
 
-        fillMysteries(this.nbrOfMysteries);
+        fillMysteries(this.nbrOfMysteries,mysteryIcon);
 
 
     }
@@ -68,16 +68,16 @@ public class Map {
         }
     }
 
-    public void fillMysteries(int number) {
+    public void fillMysteries(int number,String mysteryIcon) {
         Random p = new Random();
         int num = 0;
         while (num < number) {
             int temp = p.nextInt(0, 8);
             int temp2 = p.nextInt(0, 8);
             if (temp != 0 && temp != 7 && temp2 != 0 && temp2 != 7) {
-                if (!(getMap()[temp][temp2].equals("?"))){
-                    mapSetLocation("?", temp, temp2);
-                    Mystery k = new Mystery();
+                if (!(getMap()[temp][temp2].equals(mysteryIcon))){
+                    mapSetLocation(mysteryIcon, temp, temp2);
+                    Mystery k = new Mystery(mysteryIcon);
                     mysteries.add(k);
                     this.mysteries.get(num).setPieceHeight(temp);
                     this.mysteries.get(num).setPieceWidth(temp2);
