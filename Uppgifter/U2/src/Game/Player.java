@@ -28,9 +28,12 @@ public class Player {
         return this.playerIcon;
     }
 
-    public void setScore(){
+    public void addScore(){
         playerScore ++;
 
+    }
+    public void setScore( int score){
+        this.playerScore = score;
     }
 
     public int getScore(){

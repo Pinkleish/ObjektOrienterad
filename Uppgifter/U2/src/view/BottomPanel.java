@@ -41,4 +41,16 @@ public class BottomPanel extends JPanel {
     public void clearLiveFeed(){
         liveFeedArea.setText("");
     }
+    public void updateScore(String icon, int score){
+
+         switch(icon){
+             case "Z":
+                playerOneScoreLabel.setText(String.valueOf("Player one score: " +score));
+                break;
+             case "Q":
+                playerTwoScoreLabel.setText(String.valueOf("Player two score: " +score));
+                break;
+        }
+
+    }
 }

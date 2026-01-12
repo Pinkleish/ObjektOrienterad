@@ -18,10 +18,10 @@ public class Turn {
 
     public int checkTurn(){
         if (counter % 2 == 0){
-            return 1;
+            return 2;
         }
         else{
-            return 2;
+            return 1;
         }
     }
 

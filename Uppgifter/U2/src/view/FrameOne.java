@@ -13,7 +13,7 @@ public class FrameOne extends JFrame {
     private BottomPanel bottomPanel;
 
 
-    public FrameOne(int row, int col,int width, int height,Controller controller) {
+    public FrameOne(int row, int col,int width, int height, Controller controller) {
         super("Omvävlning");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -44,6 +44,9 @@ public class FrameOne extends JFrame {
     }
     public void clearLiveFeed(){
         bottomPanel.clearLiveFeed();
+    }
+    public void updateScore(String icon, int score){
+        bottomPanel.updateScore(icon, score);
     }
 
 
