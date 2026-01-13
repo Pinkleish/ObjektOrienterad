@@ -2,18 +2,16 @@ package Game;
 import java.util.Random;
 
 public class Mystery implements PlaceablePosition{
-    private String mysteryIcon;
     private int mysteryHeight;
     private int mysteryWidth;
     private String mysteryName;
     private int mysteryID;
 
 
-    public Mystery(String mysteryIcon) {
+    public Mystery() {
         Random r = new Random();
         int selectedMystery = r.nextInt(1, 4);
         this.mysteryName = setMysteryName(selectedMystery);
-        this.mysteryIcon = mysteryIcon;
 
     }
 
@@ -70,19 +68,8 @@ public class Mystery implements PlaceablePosition{
         this.mysteryID = ID;
     }
 
-    public String getMysteryIcon(){
-       return this.mysteryIcon;
-    }
 
-    @Override
-    public void setIcon(String icon) {
-        this.mysteryIcon = icon;
-    }
 
-    @Override
-    public String getIcon() {
-        return this.mysteryIcon;
-    }
 
 
 

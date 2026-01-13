@@ -9,18 +9,13 @@ import java.awt.event.ActionListener;
 
 public class MainPanel extends JPanel {
     private JButton[][] buttons;
-    private FrameOne frameOne;
     private Controller controller;
 
 
 
 
-    public MainPanel(int height, int width, FrameOne frameOne,Controller controller) {
-
+    public MainPanel(Controller controller) {
         this.controller = controller;
-        this.frameOne = frameOne;
-
-
 
     }
 
@@ -33,12 +28,11 @@ public class MainPanel extends JPanel {
             for (int j = 0; j < buttons[0].length;j++){
                 final int height_pressed = i;
                 final int width_pressed = j;
-                buttons[i][j] = new JButton(); // Se till att denna fylls
+                buttons[i][j] = new JButton();
                 buttons[i][j].setFont(new Font("Arial", Font.PLAIN, 40));
                 buttons[i][j].addActionListener(new ActionListener() {
                  @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println("Position: " + height_pressed + "," + width_pressed + " pressed");
                      controller.buttonPressed(height_pressed,width_pressed);
                  }
                 });

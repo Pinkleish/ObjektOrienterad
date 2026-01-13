@@ -8,8 +8,7 @@ public interface PlaceablePosition {
     public int getPieceWidth();
     public int getID();
     public void setID(int ID);
-    public abstract void setIcon(String icon);
-    public abstract String getIcon();
+
 
 
 }

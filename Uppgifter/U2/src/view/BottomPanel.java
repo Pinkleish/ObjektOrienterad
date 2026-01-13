@@ -4,20 +4,23 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BottomPanel extends JPanel {
-    private FrameOne frameOne;
     private JLabel playerOneScoreLabel;
     private JLabel playerTwoScoreLabel;
     private JTextArea liveFeedArea;
+    private String playerOneIcon;
+    private String playerTwoIcon;
 
-    public BottomPanel(int height, int width, FrameOne frameOne){
-        this.frameOne = frameOne;
+
+    public BottomPanel(int height, int width, String playerOneIcon, String playerTwoIcon){
         setLayout(new BorderLayout());
+        this.playerOneIcon = playerOneIcon;
+        this.playerTwoIcon = playerTwoIcon;
 
-        playerOneScoreLabel = new JLabel("Player 1 Score: 0", SwingConstants.CENTER);
+        playerOneScoreLabel = new JLabel("Player " + playerOneIcon + " Score: 0", SwingConstants.CENTER);
         playerOneScoreLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(playerOneScoreLabel, BorderLayout.WEST);
 
-        playerTwoScoreLabel = new JLabel("Player 2 Score: 0", SwingConstants.CENTER);
+        playerTwoScoreLabel = new JLabel("Player " + playerTwoIcon +" Score: 0", SwingConstants.CENTER);
         playerTwoScoreLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(playerTwoScoreLabel, BorderLayout.EAST);
 
@@ -42,14 +45,11 @@ public class BottomPanel extends JPanel {
         liveFeedArea.setText("");
     }
     public void updateScore(String icon, int score){
-
-         switch(icon){
-             case "Z":
-                playerOneScoreLabel.setText(String.valueOf("Player one score: " +score));
-                break;
-             case "Q":
-                playerTwoScoreLabel.setText(String.valueOf("Player two score: " +score));
-                break;
+        if (icon.equals(playerOneIcon)){
+            playerOneScoreLabel.setText(String.valueOf("Player "+ icon + " score: " +score));
+        }
+        else if(icon.equals(playerTwoIcon)){
+            playerTwoScoreLabel.setText(String.valueOf("Player "+ icon +" score: " +score));
         }
 
     }

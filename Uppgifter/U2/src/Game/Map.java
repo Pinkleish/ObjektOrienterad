@@ -6,7 +6,6 @@ public class Map {
     private String[][] map;
     private int nbrOfMysteries;
     private ArrayList<Mystery> mysteries = new ArrayList<>();
-    private String mysteryIcon;
     private int height;
     private int width;
 
@@ -43,15 +42,7 @@ public class Map {
     }
 
     // Printar ut varje element bredvid varandra & printar ny rad innan varje rad, skapar en 8x8 box
-    public void printMap() {
-        System.out.println();
-        for (int row = 0; row < this.map.length; row++) {
-            System.out.println("");
-            for (int col = 0; col < this.map.length; col++) {
-                System.out.print(this.map[row][col] + " ");
-            }
-        }
-    }
+
 
     // Sätter viss position på kartan till en viss ikon, t.ex Mystery ikon eller Player ikon
     public void mapSetLocation(String icon, int height, int width) {
@@ -59,7 +50,6 @@ public class Map {
     }
 
 
-    // TEMPORARY, KEEP AT THE BOTTOM - Fyller kartan med "O" för att lätt se den
     public void tempoFillMap(String mapFiller) {
         for (int i = 0; i < this.map.length; i++) {
             for (int j = 0; j < this.map.length; j++) {
@@ -77,7 +67,7 @@ public class Map {
             if (temp != 0 && temp != 7 && temp2 != 0 && temp2 != 7) {
                 if (!(getMap()[temp][temp2].equals(mysteryIcon))){
                     mapSetLocation(mysteryIcon, temp, temp2);
-                    Mystery k = new Mystery(mysteryIcon);
+                    Mystery k = new Mystery();
                     mysteries.add(k);
                     this.mysteries.get(num).setPieceHeight(temp);
                     this.mysteries.get(num).setPieceWidth(temp2);
@@ -85,10 +75,7 @@ public class Map {
                 }
 
                 }
-
-
         }
-        //generateMysteries(num);
     }
 
 
@@ -103,11 +90,6 @@ public class Map {
         return this.nbrOfMysteries;
     }
 
-    //public void generateMysteries() {
-        //for(int i = 0; i < number; i ++){
-       // Mystery k = new Mystery();
-       // this.mysteries.add(k);
-   // }
 
     public ArrayList<Mystery> getList() {
         return this.mysteries;

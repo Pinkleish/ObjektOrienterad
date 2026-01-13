@@ -1,5 +1,4 @@
 package Game;
-import java.util.Random;
 
 
 public class Turn {
@@ -7,8 +6,7 @@ public class Turn {
 
 
     public Turn(){
-        //counter = startingTurn();
-        this.counter = 0;
+        this.counter = 1;
 
     }
     public int playTurn(){
@@ -25,20 +23,7 @@ public class Turn {
         }
     }
 
-    public int startingTurn(){
-        Random random = new Random();
-        int start = random.nextInt(1, 3);
-        return start;
-    }
 
-    public int getTurn(){
-        return counter;
-    }
-
-    public int skipTurn(){
-        counter = counter + 2;
-        return counter;
-    }
 
 }
 

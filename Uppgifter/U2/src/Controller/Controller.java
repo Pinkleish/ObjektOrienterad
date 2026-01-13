@@ -1,35 +1,15 @@
 package Controller;
 import Game.*;
-import view.BottomPanel;
 import view.FrameOne;
 import view.GameOverFrame;
-
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Objects;
+
 
 // TODO "LOGBOK"
 // Kolla om player & playerpiece har attribut de inte behöver. T.ex ID för playerpiece eller arraylisten "playerpieces" i player
-// Ta bort generateMystery metod i map om den inte behövs. FIxat
-// FillMysteries genererar fler mysterium än den ska kunna göra - KANSKE FIXAT
-// FillMysteries kan placerar mer änett mysterium objekt på samma position - orsakar att ArrayListan "mysteries" i map blir större än antalet mysterium på kartan - FIXAT!
-// I metoden FillMysteries tog jag bort for loopen då den itererade över number utan anledning, la också till en "if" sats för att kolla att platsen inte redan är ett mysterium
-// Tog bort objektet "mysteryOne" som användes för tester & tog bort ArrayListan mysteries från Controller
-// Ta bort separata map.mapSet & updateGUIicon då det ska ersättas med en metod som anropar båda samtidigt
-// Fundera på om det är snyggare att göra alla mysterium till metoder som anropas i vår switch case
-// rad 247 & 261 i controller har olika "if statement" men verkar göra samma sak? Går det att göra till en enda metod?
-// demagog1 ersatte inte vänster position med en fiende pjäs då det redan fanns en spelare1 pjäs - FIXAT
-// Testat så att överraskning funkar i ALLA riktningar SAMTIDIGT, det funkade :)
-// Massivt ändrat hur GUI hierarkin fungerar
-// Lagt till metoder för att populateLiveFeed - här kommer all ny information som är visentlig till spelaren till GUIn
-// Lagt till metoder för att visa Spelare 1 & 2 Score
-// Om demagog eller additiva metoder sätter en pjäs på ett annat mysterium så tas det mysterium inte bort från nbrofmyseries - fixat
-// Vinst för alla mysterium tagna känns nu igen korrekt av spelet och printas till terminal & GUI
-// Fixat korrekt poängsystem(tror jag)
-// Fixat så poängen visas live i gui
-// Fixat game over check ifall alla rutor är fyllda med pjäser och så att man inte kan fortsätta trycka. (Funkar inte perfekt)
-// Fixat så det printas vems tur det är
-// Gjort en game over frame som visar resultat (Inte alls perfekt)
+// Ta bort onödiga metoder, attribut, kommentarer etc
+// fixa javadoc
+
 
 
 public class Controller {
@@ -37,16 +17,14 @@ public class Controller {
     private Map map;
     private Player playerOne;
     private Player playerTwo;
-    private int nbrMysteries;
     private Turn turn;
     private int nbrOfPiecesTotal;
-    private int nbrOfPieces;
     private int nbrMysteriesTotal;
     private boolean gameOver = false;
     String mysteryIcon = "?";
     String mapEmpty = " ";
-    String playerOneIcon = "Z";
-    String playerTwoIcon = "Q";
+    String playerOneIcon = "O";
+    String playerTwoIcon = "X";
 
 
     public Controller() {
@@ -54,15 +32,15 @@ public class Controller {
         playerTwo = new Player(playerTwoIcon);
         map = new Map(8, 8, mapEmpty, mysteryIcon);
         turn = new Turn();
-        frameOne = new FrameOne(map.getHeight(), map.getWidth(), 750, 750, this);
+        frameOne = new FrameOne(map.getHeight(), map.getWidth(), 750, 750, this,playerOneIcon,playerTwoIcon);
 
         nbrMysteriesTotal = map.getNbrOfMysteries();
         nbrOfPiecesTotal = countTurns(map);
         turn.checkTurn();
 
-        System.out.println("TEST: ny map");
-        map.printMap();
-        frameOne.populateLiveFeed("Player " + turn.checkTurn());
+
+
+        frameOne.populateLiveFeed("Player " + getPlayersTurn().getPlayerIcon() + "'s turn");
 
 
         for (int row = 0; row < map.getHeight(); row++) {
@@ -97,41 +75,39 @@ public class Controller {
 
             if (player.getPlayerPieces().isEmpty()) {
                 frameOne.clearLiveFeed();
-                frameOne.populateLiveFeed("player " + player.getPlayerIcon() + " placerade sin första pjäs");
-                player.addPlayerPiece(height, width, player.getPlayerPieces().size());
+                frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " placerade sin första pjäs");
+                player.addPlayerPiece(height, width);
                 checkMystery(player, height, width);
                 setIconMapAndGUI(player.getPlayerIcon(), height, width);
-                map.printMap();
-                System.out.println("FOR TESTING: Placerade första pjäs");
+
+
                 turn.playTurn();
                 countScore(map);
-                frameOne.populateLiveFeed("Player " + turn.checkTurn());
+                frameOne.populateLiveFeed("Player " + getPlayersTurn().getPlayerIcon() + "'s turn");
                 frameOne.updateScore(player.getPlayerIcon(), player.getScore());
                 return;
             }
             if (checkAdjacent(height, width)) {
                 frameOne.clearLiveFeed();
-                frameOne.populateLiveFeed("player " + player.getPlayerIcon() + " placerade en pjäs");
-                player.addPlayerPiece(height, width, player.getPlayerPieces().size());
+                frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " placerade en pjäs");
+                player.addPlayerPiece(height, width);
                 checkSurprise(player, height, width);
                 checkMystery(player, height, width);
-                map.printMap();
-                System.out.println("FOR TESTING: Placerade en pjäs");
+
+
                 setIconMapAndGUI(player.getPlayerIcon(), height, width);
                 turn.playTurn();
                 countScore(map);
-                frameOne.populateLiveFeed("Player " + turn.checkTurn());
+                frameOne.populateLiveFeed("Player " + getPlayersTurn().getPlayerIcon() + "'s turn");
                 frameOne.updateScore(player.getPlayerIcon(), player.getScore());
                 checkGameOver(map);
                 return;
             } else {
-                System.out.println("Kunde inte placera pjäs");
+
                 frameOne.populateLiveFeed("Kunde inte placera pjäs");
                 return;
             }
         }
-        map.printMap();
-        System.out.println("Platsen inte tom");
         frameOne.populateLiveFeed("Platsen inte ledig");
     }
 
@@ -211,10 +187,10 @@ public class Controller {
                 try {
                     if (checkSurpriseValidity(player, height, width, i, j)) {
                         surpriseCommit(player, height, width, i, j);
-                        System.out.println("Valid surprise");
+
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("Check surprise out of bounds");
+
 
                 }
             }
@@ -223,7 +199,7 @@ public class Controller {
 
     public void checkMystery(Player player, int height, int width) {
         if (map.getMap()[height][width].equals(mysteryIcon)) {
-            System.out.println("Mystery found!");
+
             nbrMysteriesTotal--;
             for (int i = 0; i < map.getList().size(); i++) {
                 if (map.getList().get(i).getPieceHeight() == height && map.getList().get(i).getPieceWidth() == width) {
@@ -234,7 +210,7 @@ public class Controller {
 
             }
             if (nbrMysteriesTotal == 0) {
-                System.out.print("Spelet avslutat");
+
                 frameOne.populateLiveFeed("Spelet avslutat!");
                 countScore(map);
 
@@ -250,8 +226,8 @@ public class Controller {
             case 1:
                 // Ska skippa en tur
                 turn.playTurn();
-                System.out.print("Tidshopp");
-                frameOne.populateLiveFeed("player " + player.getPlayerIcon() + " Has activated Tidshopp!");
+
+                frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " Has activated Tidshopp!");
                 break;
             case 2:
                 // Platserna ovanför, nedanför, till vänster, samt i mitten fylls med dina pjäser.
@@ -274,8 +250,8 @@ public class Controller {
                 setIconMapAndGUI(player.getPlayerIcon(), height, width + 1);// höger
                 setIconMapAndGUI(player.getPlayerIcon(), height, width); // mitten
 
-                System.out.print("AdditivaMetoder");
-                frameOne.populateLiveFeed("player " + player.getPlayerIcon() + " Has activated AdditivaMetoder!");
+
+                frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " Has activated AdditivaMetoder!");
 
 
                 break;
@@ -298,9 +274,28 @@ public class Controller {
                         nbrMysteriesTotal--;
                     }
                     setIconMapAndGUI(playerTwoIcon, height, width + 1);// höger
-                    setIconMapAndGUI(playerOneIcon, height, width); // mitten
-                    System.out.println("Demagog1");
-                    frameOne.populateLiveFeed("player " + player.getPlayerIcon() + " Has activated demagog!");
+
+                    if (checkVacant(height - 1, width - 1) == 1) { // vänster uppe
+                        nbrMysteriesTotal--;
+                    }
+                    setIconMapAndGUI(playerTwoIcon, height -1, width - 1);  // vänster uppe
+                    if (checkVacant(height - 1, width + 1) == 1) {
+                        nbrMysteriesTotal --;
+                    }
+                    setIconMapAndGUI(playerTwoIcon, height -1, width  + 1); // höger uppe
+                    if(checkVacant(height + 1, width - 1) == 1){
+                        nbrMysteriesTotal --;
+                    }
+                    setIconMapAndGUI(playerTwoIcon, height + 1, width - 1); // vänster nere
+                    if(checkVacant(height + 1, width + 1) == 1){
+                        nbrMysteriesTotal--;
+                    }
+                    setIconMapAndGUI(playerTwoIcon, height + 1 , width + 1); // höger nere
+
+                    setIconMapAndGUI(playerOneIcon, height, width); // mitten behöver ingen check
+
+
+                    frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " Has activated demagog!");
                     countScore(map);
                     frameOne.updateScore(playerTwoIcon, playerTwo.getScore());
 
@@ -322,9 +317,27 @@ public class Controller {
                         nbrMysteriesTotal--;
                     }
                     setIconMapAndGUI(playerOneIcon, height, width + 1);// höger
+                    if (checkVacant(height - 1, width - 1) == 1) { // vänster uppe
+                        nbrMysteriesTotal--;
+                    }
+                    setIconMapAndGUI(playerOneIcon, height -1, width - 1);  // vänster uppe
+                    if (checkVacant(height - 1, width + 1) == 1) {
+                        nbrMysteriesTotal --;
+                    }
+                    setIconMapAndGUI(playerOneIcon, height -1, width  + 1); // höger uppe
+                    if(checkVacant(height + 1, width - 1) == 1){
+                        nbrMysteriesTotal --;
+                    }
+                    setIconMapAndGUI(playerOneIcon, height + 1, width - 1); // vänster nere
+                    if(checkVacant(height + 1, width + 1) == 1){
+                        nbrMysteriesTotal--;
+                    }
+                    setIconMapAndGUI(playerOneIcon, height + 1 , width + 1); // höger nere
+
+
                     setIconMapAndGUI(playerTwoIcon, height, width); // mitten
-                    System.out.println("Demagog2");
-                    frameOne.populateLiveFeed("player " + player.getPlayerIcon() + " Has activated demagog!");
+
+                    frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " Has activated demagog!");
                     countScore(map);
                     frameOne.updateScore(playerOneIcon, playerOne.getScore());
 
@@ -393,27 +406,63 @@ public class Controller {
     }
 
     public void executeGameOver() {
+        countScore(map);
+        updateTotalScore(playerOne.getScore(), playerTwo.getScore());
         frameOne.populateLiveFeed("Spelet avslutat");
-        frameOne.populateLiveFeed("Player 1 score " + playerOne.getScore());
-        frameOne.populateLiveFeed("Player 2 score " + playerTwo.getScore());
-        new GameOverFrame(playerOne.getScore(), playerTwo.getScore());
+        new GameOverFrame(playerOne.getScore(), playerTwo.getScore(),this, playerOneIcon, playerTwoIcon);
         gameOver = true;
-        if (playerOne.getScore() == playerTwo.getScore()) {
-            frameOne.populateLiveFeed("Its a tie. Both players have " + playerOne.getScore() + " points");
 
-        } else if (playerTwo.getScore() > playerOne.getScore()) {
-            frameOne.populateLiveFeed("Game over. Player 2 wins with " + playerTwo.getScore() + " points");
-
-        } else if (playerOne.getScore() > playerTwo.getScore()) {
-            frameOne.populateLiveFeed("Game over. Player 1 wins with " + playerOne.getScore() + " points");
-
-        }
     }
 
 
     public void updateTotalScore(int playerOneScore, int playerTwoScore) {
         frameOne.updateScore(playerOneIcon, playerOneScore);
         frameOne.updateScore(playerTwoIcon, playerTwoScore);
+    }
+
+    public void newGame(){
+        frameOne.clearLiveFeed();
+        playerOne = new Player(playerOneIcon);
+        playerTwo = new Player(playerTwoIcon);
+        map = new Map(8, 8, mapEmpty, mysteryIcon);
+        turn = new Turn();
+
+        gameOver = false;
+        nbrMysteriesTotal = map.getNbrOfMysteries();
+        nbrOfPiecesTotal = countTurns(map);
+        turn.checkTurn();
+
+
+        frameOne.populateLiveFeed("Player " + getPlayersTurn().getPlayerIcon() + "'s turn");
+
+
+        for (int row = 0; row < map.getHeight(); row++) {
+            for (int col = 0; col < map.getWidth(); col++) {
+                frameOne.updateMapPosition(map.getValue(row, col), row, col);
+                countScore(map);
+                updateTotalScore(playerOne.getScore(), playerTwo.getScore());
+            }
+        }
+    }
+    public String checkWinner(){
+        if (playerOne.getScore() == playerTwo.getScore()) {
+            return "Its a tie. Both players have " + playerOne.getScore() + " points";
+
+        } else if (playerTwo.getScore() > playerOne.getScore()) {
+            return "Game over. Player "+ playerTwoIcon + " wins with " + playerTwo.getScore() + " points";
+
+        } else{
+            return "Game over. Player " + playerOneIcon +  " wins with " + playerOne.getScore() + " points";
+
+        }
+    }
+    public Player getPlayersTurn(){
+        if (turn.checkTurn() == 1){
+            return playerOne;
+        }
+        else{
+            return playerTwo;
+        }
     }
 }
 
