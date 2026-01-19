@@ -92,12 +92,11 @@ public class Controller {
      * @author Kasper Åkesson
      */
     public void newPlayerPiece(Player player, int height, int width) {
-        if (checkVacant(height, width) > 0) {
+        if (checkVacant(height, width) == 2) {
             if (player.getPlayerPieces().isEmpty()) {
                 frameOne.clearLiveFeed();
                 frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " placerade sin första pjäs");
                 player.addPlayerPiece(height, width);
-                checkMystery(player, height, width);
                 setIconMapAndGUI(player.getPlayerIcon(), height, width);
                 turn.playTurn();
                 countScore(map);
@@ -109,9 +108,11 @@ public class Controller {
                 frameOne.clearLiveFeed();
                 frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " placerade en pjäs");
                 player.addPlayerPiece(height, width);
-                checkSurprise(player, height, width);
-                checkMystery(player, height, width);
                 setIconMapAndGUI(player.getPlayerIcon(), height, width);
+                boolean mysteryTriggered = checkMystery(player, height, width);
+                if (!mysteryTriggered) {
+                    checkSurprise(player, height, width);
+                }
                 turn.playTurn();
                 countScore(map);
                 frameOne.populateLiveFeed("Player " + getPlayersTurn().getPlayerIcon() + "'s turn");
@@ -163,6 +164,11 @@ public class Controller {
                             || map.getMap()[height + i][width + j].equals(playerTwoIcon)) {
                         return true;
                     }
+                    else if(map.getMap()[height + i][width + j].equals(mysteryIcon)
+                            || map.getMap()[height + i][width + j].equals(mysteryIcon)){
+                        return true;
+
+                    }
                 }
             }
         }
@@ -200,20 +206,35 @@ public class Controller {
      * @param width startposition kolumn
      * @param i riktning i radled
      * @param j riktning i kolumnled
-     * @author¨Axel Dahl
+     * @author Axel Dahl
      * @author Kasper Åkesson
      */
     public void surpriseCommit(Player player, int height, int width, int i, int j) {
         while (true) {
             height += i;
             width += j;
-            if (pieceIdentify(player, height, width) == 2) {
+            // STOP if out of bounds
+            if (height < 0 || height >= map.getHeight()
+                    || width < 0 || width >= map.getWidth()) {
                 return;
-            } else {
-                setIconMapAndGUI(player.getPlayerIcon(), height, width);
-                countScore(map);
-                updateTotalScore(playerOne.getScore(), playerTwo.getScore());
             }
+
+            int pieceType = pieceIdentify(player, height, width);
+
+            // STOP when we reach our own piece
+            if (pieceType == 2) {
+                return;
+            }
+
+            // STOP if chain breaks (empty or mystery)
+            if (pieceType == 0 || map.getMap()[height][width].equals(mysteryIcon)) {
+                return;
+            }
+
+            // Flip opponent piece
+            setIconMapAndGUI(player.getPlayerIcon(), height, width);
+            countScore(map);
+            updateTotalScore(playerOne.getScore(), playerTwo.getScore());
         }
     }
 
@@ -229,19 +250,26 @@ public class Controller {
      * @author Axel Dahl
      * @author Kasper Åkesson
      */
-    public boolean checkSurpriseValidity(Player player, int height, int width, int i, int j) {
+    public int checkSurpriseValidity(Player player, int height, int width, int i, int j) {
         if (pieceIdentify(player, height + i, width + j) == 1) {
             while (true) {
                 height += i;
                 width += j;
                 if (pieceIdentify(player, height + i, width + j) == 2) {
-                    return true;
+                    return 1;
                 } else if (pieceIdentify(player, height + i, width + j) == 0) {
-                    return false;
+                    return 0;
                 }
             }
         }
-        return false;
+        else if(checkVacant(height+i,width+j) == 1){ // kolla efter mysterium
+            height += i;
+            width += j;
+            if(pieceIdentify(player, height + i, width + j) == 2){
+                return 2;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -257,9 +285,16 @@ public class Controller {
     public void checkSurprise(Player player, int height, int width) {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) {
+                    continue;
+                }
                 try {
-                    if (checkSurpriseValidity(player, height, width, i, j)) {
+                    if (checkSurpriseValidity(player, height, width, i, j)==1) {
                         surpriseCommit(player, height, width, i, j);
+                    }
+                    else if(checkSurpriseValidity(player,height,width,i,j)==2){
+                        checkMystery(player,height+i,width+j);
+                        setIconMapAndGUI(player.getPlayerIcon(),height+i,width+j);
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                 }
@@ -276,13 +311,15 @@ public class Controller {
      * @author Axel Dahl
      * @author Kasper Åkesson
      */
-    public void checkMystery(Player player, int height, int width) {
+    public boolean checkMystery(Player player, int height, int width) {
         if (map.getMap()[height][width].equals(mysteryIcon)) {
             nbrMysteriesTotal--;
             for (int i = 0; i < map.getList().size(); i++) {
                 if (map.getList().get(i).getPieceHeight() == height
                         && map.getList().get(i).getPieceWidth() == width) {
                     executeMystery(player, map.getList().get(i).getID(), height, width);
+
+
                     break;
                 }
             }
@@ -290,7 +327,9 @@ public class Controller {
                 frameOne.populateLiveFeed("Spelet avslutat!");
                 countScore(map);
             }
+            return true;
         }
+        return false;
     }
 
     /**
@@ -310,7 +349,8 @@ public class Controller {
                 turn.playTurn();
 
                 frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " Has activated Tidshopp!");
-                break;
+
+            break;
             case 2:
                 // Platserna ovanför, nedanför, till vänster, samt i mitten fylls med dina pjäser.
                 setIconMapAndGUI(player.getPlayerIcon(), height + 1, width);// under
@@ -322,8 +362,7 @@ public class Controller {
 
                 frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " Has activated AdditivaMetoder!");
 
-
-                break;
+            break;
             case 3:
                 // Mysteriets pjäs blir spelaren. Resten runt omkring blir motståndarens.
                 if (player.getPlayerIcon().equals(playerOneIcon)) {
@@ -331,10 +370,10 @@ public class Controller {
                     setIconMapAndGUI(playerTwoIcon, height - 1, width);// ovanför
                     setIconMapAndGUI(playerTwoIcon, height, width - 1);// vänster
                     setIconMapAndGUI(playerTwoIcon, height, width + 1);// höger
-                    setIconMapAndGUI(playerTwoIcon, height -1, width - 1);  // vänster uppe
-                    setIconMapAndGUI(playerTwoIcon, height -1, width  + 1); // höger uppe
+                    setIconMapAndGUI(playerTwoIcon, height - 1, width - 1);  // vänster uppe
+                    setIconMapAndGUI(playerTwoIcon, height - 1, width + 1); // höger uppe
                     setIconMapAndGUI(playerTwoIcon, height + 1, width - 1); // vänster nere
-                    setIconMapAndGUI(playerTwoIcon, height + 1 , width + 1); // höger nere
+                    setIconMapAndGUI(playerTwoIcon, height + 1, width + 1); // höger nere
                     setIconMapAndGUI(playerOneIcon, height, width); // mitten behöver ingen check
 
 
@@ -343,20 +382,22 @@ public class Controller {
                     frameOne.updateScore(playerTwoIcon, playerTwo.getScore());
 
 
+
                 } else if (player.getPlayerIcon().equals(playerTwoIcon)) {
                     setIconMapAndGUI(playerOneIcon, height + 1, width); // under
                     setIconMapAndGUI(playerOneIcon, height - 1, width);// ovanför
                     setIconMapAndGUI(playerOneIcon, height, width - 1);// vänster
                     setIconMapAndGUI(playerOneIcon, height, width + 1);// höger
-                    setIconMapAndGUI(playerOneIcon, height -1, width - 1);  // vänster uppe
-                    setIconMapAndGUI(playerOneIcon, height -1, width  + 1); // höger uppe
+                    setIconMapAndGUI(playerOneIcon, height - 1, width - 1);  // vänster uppe
+                    setIconMapAndGUI(playerOneIcon, height - 1, width + 1); // höger uppe
                     setIconMapAndGUI(playerOneIcon, height + 1, width - 1); // vänster nere
-                    setIconMapAndGUI(playerOneIcon, height + 1 , width + 1); // höger nere
+                    setIconMapAndGUI(playerOneIcon, height + 1, width + 1); // höger nere
                     setIconMapAndGUI(playerTwoIcon, height, width); // mitten
 
                     frameOne.populateLiveFeed("Player " + player.getPlayerIcon() + " Has activated demagog!");
                     countScore(map);
                     frameOne.updateScore(playerOneIcon, playerOne.getScore());
+
 
                 }
 
@@ -364,6 +405,8 @@ public class Controller {
                 break;
         }
         countScore(map);
+
+
 
     }
 
@@ -436,7 +479,7 @@ public class Controller {
         }
         for (int row = 0; row < map.getMap().length; row++) {
             for (int col = 0; col < map.getMap().length; col++) {
-                if (map.getMap()[row][col].equals(mapEmpty) || map.getMap()[row][col].equals(mysteryIcon)) {
+                if (map.getMap()[row][col].equals(mapEmpty)) {
                     return;
                 }
             }
